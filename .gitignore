@@ -1,1 +1,4 @@
 *.bkp
+.idea/
+obj/
+appsettings.Development.json
