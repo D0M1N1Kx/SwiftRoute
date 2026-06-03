@@ -12,6 +12,6 @@ public class InventoryItem
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-    public Warehouse Warehouse { get; set; } = null;
+    public Warehouse Warehouse { get; set; } = null!;
     public ICollection<Order> Orders { get; set; } = [];
 }
