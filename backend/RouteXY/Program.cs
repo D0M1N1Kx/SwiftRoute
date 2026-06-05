@@ -12,10 +12,7 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1",
         Description = "Courier management system API"
     });
-
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    options.IncludeXmlComments(xmlPath);
+    options.UseInlineDefinitionsForEnums();
 });
 
 var app = builder.Build();
