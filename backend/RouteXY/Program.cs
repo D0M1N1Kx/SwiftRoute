@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using Microsoft.OpenApi;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,12 +13,15 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1",
         Description = "Courier management system API"
     });
-    options.UseInlineDefinitionsForEnums();
 });
+
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
+
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
 
 var app = builder.Build();
 
