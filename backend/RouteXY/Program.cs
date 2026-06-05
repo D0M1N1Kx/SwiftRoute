@@ -1,4 +1,4 @@
-using System.Reflection;
+using System.Text.Json.Serialization;
 using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +13,10 @@ builder.Services.AddSwaggerGen(options =>
         Description = "Courier management system API"
     });
     options.UseInlineDefinitionsForEnums();
+});
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
 var app = builder.Build();
