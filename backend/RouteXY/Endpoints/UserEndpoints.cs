@@ -87,5 +87,31 @@ public static class UserEndpoints
         })
         .RequireAuthorization(policy => policy.RequireRole("Admin"))
         .WithSummary("Delete user");
+
+        group.MapPatch("/{id:guid}", async (
+            Guid id,
+            UpdateUserRequest request,
+            AppDbContext db,
+            IValidator<UpdateUserRequest> validator
+        ) =>
+        {
+            var validation = await validator.ValidateAsync(request);
+            if (!validation.IsValid)
+                return Results.ValidationProblem(validation.ToDictionary());
+            
+            var user = await db.Users.FindAsync(id);
+            if (user == null)
+                return Results.NotFound();
+            
+            if (request.FullName != null) user.FullName = request.FullName;
+            if (request.Phone != null) user.Phone = request.Phone;
+            if (request.IsActive.HasValue) user.IsActive = request.IsActive.Value;
+            user.UpdatedAt = DateTime.UtcNow;
+
+            await db.SaveChangesAsync();
+            return Results.NoContent();
+        })
+        .RequireAuthorization(policy => policy.RequireRole("Admin"))
+        .WithSummary("Update user");
     }
 }
