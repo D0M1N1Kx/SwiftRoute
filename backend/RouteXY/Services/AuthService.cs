@@ -66,4 +66,46 @@ public class AuthService
             }
         };
     }
+
+    public async Task<LoginResponse> LoginAsync(LoginRequest request)
+    {
+        var user = await _db.Users
+            .FirstOrDefaultAsync(u => u.Email == request.Email);
+        
+        if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+            throw new UnauthorizedAccessException("Invalid email or password");
+        
+        if (!user.IsActive)
+            throw new UnauthorizedAccessException("Account is disabled");
+        
+        var refreshTokenValue = _tokenService.GenerateRefreshToken();
+        var refreshToken = new RefreshToken
+        {
+            Id = Guid.NewGuid(),
+            UserId = user.Id,
+            TokenHash = _tokenService.HashToken(refreshTokenValue),
+            ExpiresAt = DateTime.UtcNow.AddDays(30)
+        };
+
+        _db.RefreshTokens.Add(refreshToken);
+        await _db.SaveChangesAsync();
+
+        var accessToken = _tokenService.GenerateAccessToken(user);
+
+        return new LoginResponse
+        {
+            AccessToken = accessToken,
+            RefreshToken = refreshTokenValue,
+            User = new UserResponse
+            {
+                Id = user.Id,
+                FullName = user.FullName,
+                Email = user.Email,
+                Role = user.Role,
+                Phone = user.Phone,
+                IsActive = user.IsActive,
+                CreatedAt = user.CreatedAt
+            }
+        };
+    }
 }
