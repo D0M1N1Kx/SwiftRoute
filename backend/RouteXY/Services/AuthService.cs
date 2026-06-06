@@ -108,4 +108,61 @@ public class AuthService
             }
         };
     }
+
+    public async Task<LoginResponse> RefreshAsync(RefreshTokenRequest request)
+    {
+        var tokenHash = _tokenService.HashToken(request.RefreshToken);
+
+        var refreshToken = await _db.RefreshTokens
+            .Include(rt => rt.User)
+            .FirstOrDefaultAsync(rt => rt.TokenHash == tokenHash);
+        
+        if (refreshToken == null || refreshToken.Revoked || refreshToken.ExpiresAt < DateTime.UtcNow)
+            throw new UnauthorizedAccessException("Invalid or expired refresh token");
+        
+        refreshToken.Revoked = true;
+
+        var newRefreshTokenValue = _tokenService.GenerateRefreshToken();
+        var newRefreshToken = new RefreshToken
+        {
+            Id = Guid.NewGuid(),
+            UserId = refreshToken.UserId,
+            TokenHash = _tokenService.HashToken(newRefreshTokenValue),
+            ExpiresAt = DateTime.UtcNow.AddDays(30)
+        };
+
+        _db.RefreshTokens.Add(newRefreshToken);
+        await _db.SaveChangesAsync();
+
+        var accessToken = _tokenService.GenerateAccessToken(refreshToken.User);
+
+        return new LoginResponse
+        {
+            AccessToken = accessToken,
+            RefreshToken = newRefreshTokenValue,
+            User = new UserResponse
+            {
+                Id = refreshToken.User.Id,
+                FullName = refreshToken.User.FullName,
+                Email = refreshToken.User.Email,
+                Role = refreshToken.User.Role,
+                Phone = refreshToken.User.Phone,
+                IsActive = refreshToken.User.IsActive,
+                CreatedAt = refreshToken.User.CreatedAt
+            }
+        };
+    }
+
+    public async Task LogoutAsync(RefreshTokenRequest request)
+    {
+        var tokenHash = _tokenService.HashToken(request.RefreshToken);
+        
+        var refreshToken = await _db.RefreshTokens
+            .FirstOrDefaultAsync(rt => rt.TokenHash == tokenHash);
+
+        if (refreshToken == null || refreshToken.Revoked) return;
+
+        refreshToken.Revoked = true;
+        await _db.SaveChangesAsync();
+    }
 }
