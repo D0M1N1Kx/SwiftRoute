@@ -8,6 +8,7 @@ using System.Text;
 using RouteXY.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using RouteXY.Api.Services;
+using RouteXY.Api.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,6 +57,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
             .UseSnakeCaseNamingConvention());
 
 builder.Services.AddSingleton<TokenService>();
+builder.Services.AddScoped<AuthService>();
 
 var app = builder.Build();
 
@@ -68,5 +70,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapAuthEndpoints();
 
 app.Run();
