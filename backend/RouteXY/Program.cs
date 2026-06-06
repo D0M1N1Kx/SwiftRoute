@@ -9,6 +9,7 @@ using RouteXY.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using RouteXY.Api.Services;
 using RouteXY.Api.Endpoints;
+using RouteXY.Api.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,6 +71,27 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapPost("/setup", async (AppDbContext db) =>
+    {
+        var admin = new User
+        {
+            Id = Guid.NewGuid(),
+            FullName = "Admin",
+            Email = "admin@gmail.com",
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("jelszo123"),
+            Role = RouteXY.Api.Enums.UserRole.Admin,
+            IsActive = true,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        };
+        db.Users.Add(admin);
+        await db.SaveChangesAsync();
+        return Results.Ok("Admin user created");
+    });
+}
 
 app.MapAuthEndpoints();
 app.MapUserEndpoints();
