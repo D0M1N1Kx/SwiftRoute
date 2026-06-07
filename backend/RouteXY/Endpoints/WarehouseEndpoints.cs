@@ -54,5 +54,35 @@ public static class WarehouseEndpoints
         })
         .RequireAuthorization()
         .WithSummary("Get all warehouses");
+
+        group.MapPatch("/{id:guid}", async (
+            Guid id,
+            AppDbContext db,
+            UpdateWarehouseRequest request,
+            IValidator<UpdateWarehouseRequest> validator
+        ) =>
+        {
+            var validation = await validator.ValidateAsync(request);
+
+            if (!validation.IsValid)
+                return Results.ValidationProblem(validation.ToDictionary());
+            
+            var warehouse = await db.Warehouses.FindAsync(id);
+
+            if (warehouse == null)
+                return Results.NotFound();
+
+            if (request.Name != null) warehouse.Name = request.Name;
+            if (request.Address != null) warehouse.Address = request.Address;
+            if (request.City != null) warehouse.City = request.City;
+            if (request.Latitude != null) warehouse.Latitude = request.Latitude;
+            if (request.Longitude != null) warehouse.Longitude = request.Longitude;
+            if (request.IsActive != null) warehouse.IsActive = (bool)request.IsActive;
+
+            await db.SaveChangesAsync();
+            return Results.NoContent();
+        })
+        .RequireAuthorization(policy => policy.RequireRole("Admin"))
+        .WithSummary("Modify warehouse");
     }
 }
