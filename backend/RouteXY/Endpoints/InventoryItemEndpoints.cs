@@ -96,5 +96,32 @@ public static class InventoryItemEndpoints
         })
         .RequireAuthorization(policy => policy.RequireRole(new string[] { "Admin", "Dispatcher" }))
         .WithSummary("Delete item by id");
+
+        group.MapPatch("/{id:guid}", async (
+            Guid id,
+            UpdateInventoryItemRequest request,
+            AppDbContext db,
+            IValidator<UpdateInventoryItemRequest> validator
+        ) =>
+        {
+            var validation = await validator.ValidateAsync(request);
+
+            if (!validation.IsValid)
+                return Results.ValidationProblem(validation.ToDictionary());
+            
+            var item = await db.InventoryItems.FindAsync(id);
+
+            if (item == null)
+                return Results.NotFound();
+            
+            if (request.Name != null) item.Name = request.Name;
+            if (request.Description != null) item.Description = request.Description;
+            if (request.Quantity != null) item.Quantity = (int)request.Quantity;
+            if (request.Unit != null) item.Unit = request.Unit;
+            if (request.Category != null) item.Category = request.Category;
+
+            await db.SaveChangesAsync();
+            return Results.Ok(item);
+        });
     }
 }
