@@ -79,7 +79,7 @@ public static class InventoryItemEndpoints
         .RequireAuthorization()
         .WithSummary("Get inventory item by id");
 
-        group.MapDelete("/{i:guid}", async (
+        group.MapDelete("/item/{i:guid}", async (
             Guid i,
             AppDbContext db
         ) =>
@@ -97,7 +97,7 @@ public static class InventoryItemEndpoints
         .RequireAuthorization(policy => policy.RequireRole(new string[] { "Admin", "Dispatcher" }))
         .WithSummary("Delete item by id");
 
-        group.MapPatch("/{id:guid}", async (
+        group.MapPatch("/item/{id:guid}", async (
             Guid id,
             UpdateInventoryItemRequest request,
             AppDbContext db,
@@ -120,8 +120,12 @@ public static class InventoryItemEndpoints
             if (request.Unit != null) item.Unit = request.Unit;
             if (request.Category != null) item.Category = request.Category;
 
+            item.UpdatedAt = DateTime.UtcNow;
+
             await db.SaveChangesAsync();
             return Results.Ok(item);
-        });
+        })
+        .RequireAuthorization(policy => policy.RequireRole(new string[] { "Admin", "Dispatcher" }))
+        .WithSummary("Update item by id");
     }
 }
