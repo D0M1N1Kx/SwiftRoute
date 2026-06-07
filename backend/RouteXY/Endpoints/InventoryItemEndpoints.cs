@@ -63,5 +63,38 @@ public static class InventoryItemEndpoints
         })
         .RequireAuthorization()
         .WithSummary("Get warehouse's inventory by id");
+
+        group.MapGet("/item/{item:guid}", async (
+            Guid item,
+            AppDbContext db
+        ) =>
+        {
+            var i = await db.InventoryItems.FindAsync(item);
+
+            if (i == null)
+                return Results.NotFound();
+
+            return Results.Ok(i);
+        })
+        .RequireAuthorization()
+        .WithSummary("Get inventory item by id");
+
+        group.MapDelete("/{i:guid}", async (
+            Guid i,
+            AppDbContext db
+        ) =>
+        {
+            var item = await db.InventoryItems.FindAsync(i);
+
+            if (item == null)
+                return Results.NotFound();
+            
+            db.Remove(item);
+            await db.SaveChangesAsync();
+
+            return Results.NoContent();
+        })
+        .RequireAuthorization(policy => policy.RequireRole(new string[] { "Admin", "Dispatcher" }))
+        .WithSummary("Delete item by id");
     }
 }
