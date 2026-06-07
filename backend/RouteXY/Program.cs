@@ -10,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using RouteXY.Api.Services;
 using RouteXY.Api.Endpoints;
 using RouteXY.Api.Entities;
-
 var builder = WebApplication.CreateBuilder(args);
 
 var jwtSettings = builder.Configuration
@@ -26,6 +25,26 @@ builder.Services.AddSwaggerGen(options =>
         Title = "RouteXY API",
         Version = "v1",
         Description = "Courier management system API"
+    });
+
+    var jwtSecurityScheme = new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Bearer {token}"
+    };
+
+    options.AddSecurityDefinition("Bearer", jwtSecurityScheme);
+
+    options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecuritySchemeReference("Bearer", null, null),
+            new List<string>()
+        }
     });
 });
 
