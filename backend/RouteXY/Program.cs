@@ -78,6 +78,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddSingleton<TokenService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<WarehouseService>();
 
 var app = builder.Build();
 
@@ -114,5 +115,6 @@ if (app.Environment.IsDevelopment())
 
 app.MapAuthEndpoints();
 app.MapUserEndpoints();
+app.MapWarehouseEndpoints();
 
 app.Run();
