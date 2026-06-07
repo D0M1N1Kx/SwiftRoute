@@ -55,6 +55,21 @@ public static class WarehouseEndpoints
         .RequireAuthorization()
         .WithSummary("Get all warehouses");
 
+        group.MapGet("/{id:guid}", async (
+            Guid id,
+            AppDbContext db
+        ) =>
+        {
+            var warehouse = await db.Warehouses.FindAsync(id);
+
+            if (warehouse == null)
+                return Results.NotFound();
+            
+            return Results.Ok(warehouse);
+        })
+        .RequireAuthorization()
+        .WithSummary("Get warehouse by id");
+
         group.MapPatch("/{id:guid}", async (
             Guid id,
             AppDbContext db,
