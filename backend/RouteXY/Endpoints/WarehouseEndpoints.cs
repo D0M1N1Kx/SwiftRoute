@@ -51,6 +51,8 @@ public static class WarehouseEndpoints
                 }).ToListAsync();
 
             return Results.Ok(warehouses);
-        });
+        })
+        .RequireAuthorization()
+        .WithSummary("Get all warehouses");
     }
 }
