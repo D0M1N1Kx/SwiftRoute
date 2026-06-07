@@ -9,4 +9,5 @@ public class WarehouseResponse
     public double? Latitude { get; set; }
     public double? Longitude { get; set; }
     public bool IsActive { get; set; }
+    public DateTime CreatedAt { get; set; }
 }
