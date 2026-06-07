@@ -116,5 +116,6 @@ if (app.Environment.IsDevelopment())
 app.MapAuthEndpoints();
 app.MapUserEndpoints();
 app.MapWarehouseEndpoints();
+app.MapInventoryItemEndpoints();
 
 app.Run();
