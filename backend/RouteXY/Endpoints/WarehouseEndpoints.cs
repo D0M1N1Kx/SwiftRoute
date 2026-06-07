@@ -99,5 +99,20 @@ public static class WarehouseEndpoints
         })
         .RequireAuthorization(policy => policy.RequireRole("Admin"))
         .WithSummary("Modify warehouse");
+
+        group.MapDelete("/{id:guid}", async (
+            Guid id,
+            AppDbContext db
+        ) =>
+        {
+            var warehouse = await db.Warehouses.FindAsync(id);
+
+            if (warehouse == null)
+                return Results.NotFound();
+            
+            db.Warehouses.Remove(warehouse);
+            await db.SaveChangesAsync();
+            return Results.NoContent();
+        });
     }
 }
