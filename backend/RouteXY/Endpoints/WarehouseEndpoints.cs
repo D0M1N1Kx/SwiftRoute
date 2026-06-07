@@ -113,6 +113,8 @@ public static class WarehouseEndpoints
             db.Warehouses.Remove(warehouse);
             await db.SaveChangesAsync();
             return Results.NoContent();
-        });
+        })
+        .RequireAuthorization(policy => policy.RequireRole("Admin"))
+        .WithSummary("Delete warehouse by id");
     }
 }
