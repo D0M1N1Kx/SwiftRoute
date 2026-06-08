@@ -79,6 +79,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddSingleton<TokenService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<WarehouseService>();
+builder.Services.AddScoped<OrderService>();
 
 var app = builder.Build();
 
@@ -117,5 +118,6 @@ app.MapAuthEndpoints();
 app.MapUserEndpoints();
 app.MapWarehouseEndpoints();
 app.MapInventoryItemEndpoints();
+app.MapOrderEndpoints();
 
 app.Run();
