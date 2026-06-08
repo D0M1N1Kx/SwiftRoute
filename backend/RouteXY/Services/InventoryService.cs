@@ -31,15 +31,18 @@ public class InventoryService
 
         _db.InventoryItems.Add(item);
         await _db.SaveChangesAsync();
-        return new InventoryItemResponse
-        {
-            Id = item.Id,
-            WarehouseId = item.WarehouseId,
-            Name = item.Name,
-            Description = item.Description,
-            Quantity = item.Quantity,
-            Unit = item.Unit,
-            Category = item.Category
-        };
+        return MapToResponse(item);
     }
+
+    private static InventoryItemResponse MapToResponse(InventoryItem i) => new()
+    {
+        Id = i.Id,
+        WarehouseId = i.WarehouseId,
+        Name = i.Name,
+        Description = i.Description,
+        Quantity = i.Quantity,
+        Unit = i.Unit,
+        Category = i.Category,
+        UpdatedAt = i.UpdatedAt
+    };
 }
