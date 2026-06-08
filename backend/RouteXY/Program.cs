@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using RouteXY.Api.Services;
 using RouteXY.Api.Endpoints;
 using RouteXY.Api.Entities;
+using RouteXY.Api.Hubs;
 var builder = WebApplication.CreateBuilder(args);
 
 var jwtSettings = builder.Configuration
@@ -81,6 +82,8 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<WarehouseService>();
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<InventoryService>();
+builder.Services.AddSignalR();
+builder.Services.AddScoped<LocationService>();
 
 var app = builder.Build();
 
@@ -120,5 +123,7 @@ app.MapUserEndpoints();
 app.MapWarehouseEndpoints();
 app.MapInventoryItemEndpoints();
 app.MapOrderEndpoints();
+app.MapHub<LocationHub>("/hubs/location");
+app.MapLocationEndpoints();
 
 app.Run();

@@ -51,20 +51,21 @@ public class LocationService
 
     public async Task<List<CourierLocationResponse>> GetLatestLocationsAsync()
     {
-        return await _db.CourierLocations
+        return (await _db.CourierLocations
             .Include(cl => cl.Courier)
-            .GroupBy(cl => cl.CourierId)
-            .Select(g => g.OrderByDescending(cl => cl.RecordedAt).First())
-            .Select(cl => new CourierLocationResponse
-            {
-                CourierId = cl.CourierId,
-                CourierName = cl.Courier.FullName,
-                Latitude = cl.Latitude,
-                Longitude = cl.Longitude,
-                SpeedKmh = cl.SpeedKmh,
-                Heading = cl.Heading,
-                RecordedAt = cl.RecordedAt
-            })
-            .ToListAsync();
+            .ToListAsync())
+        .GroupBy(cl => cl.CourierId)
+        .Select(g => g.OrderByDescending(cl => cl.RecordedAt).First())
+        .Select(cl => new CourierLocationResponse
+        {
+            CourierId = cl.CourierId,
+            CourierName = cl.Courier.FullName,
+            Latitude = cl.Latitude,
+            Longitude = cl.Longitude,
+            SpeedKmh = cl.SpeedKmh,
+            Heading = cl.Heading,
+            RecordedAt = cl.RecordedAt
+        })
+        .ToList();
     }
 }
