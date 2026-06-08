@@ -21,21 +21,13 @@ public static class InventoryItemEndpoints
         ) =>
         {
             var validation = await validator.ValidateAsync(request);
-
             if (!validation.IsValid)
                 return Results.ValidationProblem(validation.ToDictionary());
             
-            try
-            {
-                var response = await service.AddItemAsync(request);
-                return Results.Ok(response);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Results.Unauthorized();
-            }
+            var response = await service.AddItemAsync(request);
+            return Results.Created($"/inventory/{response.Id}", new { response.Id });
         })
-        .RequireAuthorization(policy => policy.RequireRole("Admin", "Dispatcher"))
+        .RequireAuthorization(policy => policy.RequireRole("Admin", "Dispatcher", "WarehouseStaff"))
         .WithSummary("Add inventory item");
 
         group.MapGet("/{warehouse:guid}", async (
