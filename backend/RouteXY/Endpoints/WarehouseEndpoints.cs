@@ -1,8 +1,5 @@
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using RouteXY.Api.Data;
 using RouteXY.Api.Requests;
-using RouteXY.Api.Responses;
 using RouteXY.Api.Services;
 
 namespace RouteXY.Api.Endpoints;
