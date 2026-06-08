@@ -25,7 +25,7 @@ public static class WarehouseEndpoints
             
             try
             {
-                var response = await service.AddWarehouse(request);
+                var response = await service.AddWarehouseAsync(request);
                 return Results.Ok(response);
             } catch (UnauthorizedAccessException)
             {
@@ -35,42 +35,26 @@ public static class WarehouseEndpoints
         .RequireAuthorization(policy => policy.RequireRole("Admin"))
         .WithSummary("Add warehouse");
 
-        group.MapGet("/", async (AppDbContext db) =>
+        group.MapGet("/", async (WarehouseService warehouseService) =>
         {
-            var warehouses = await db.Warehouses
-                .Select(w => new WarehouseResponse
-                {
-                    Id = w.Id,
-                    Name = w.Name,
-                    Address = w.Address,
-                    City = w.City,
-                    Latitude = w.Latitude,
-                    Longitude = w.Longitude,
-                    IsActive = w.IsActive,
-                    CreatedAt = w.CreatedAt
-                }).ToListAsync();
-
+            var warehouses = await warehouseService.GetAllAsync();
             return Results.Ok(warehouses);
         })
         .WithSummary("Get all warehouses");
 
         group.MapGet("/{id:guid}", async (
             Guid id,
-            AppDbContext db
+            WarehouseService warehouseService
         ) =>
         {
-            var warehouse = await db.Warehouses.FindAsync(id);
-
-            if (warehouse == null)
-                return Results.NotFound();
-            
-            return Results.Ok(warehouse);
+            var warehouse = await warehouseService.GetByIdAsync(id);
+            return warehouse == null ? Results.NotFound() : Results.Ok(warehouse);
         })
         .WithSummary("Get warehouse by id");
 
         group.MapPatch("/{id:guid}", async (
             Guid id,
-            AppDbContext db,
+            WarehouseService warehouseService,
             UpdateWarehouseRequest request,
             IValidator<UpdateWarehouseRequest> validator
         ) =>
@@ -79,38 +63,32 @@ public static class WarehouseEndpoints
 
             if (!validation.IsValid)
                 return Results.ValidationProblem(validation.ToDictionary());
-            
-            var warehouse = await db.Warehouses.FindAsync(id);
 
-            if (warehouse == null)
+            try
+            {
+                await warehouseService.UpdateWarehouseAsync(id, request);
+                return Results.NoContent();
+            } catch (KeyNotFoundException)
+            {
                 return Results.NotFound();
-
-            if (request.Name != null) warehouse.Name = request.Name;
-            if (request.Address != null) warehouse.Address = request.Address;
-            if (request.City != null) warehouse.City = request.City;
-            if (request.Latitude != null) warehouse.Latitude = request.Latitude;
-            if (request.Longitude != null) warehouse.Longitude = request.Longitude;
-            if (request.IsActive != null) warehouse.IsActive = (bool)request.IsActive;
-
-            await db.SaveChangesAsync();
-            return Results.NoContent();
+            }
         })
         .RequireAuthorization(policy => policy.RequireRole("Admin"))
         .WithSummary("Modify warehouse");
 
         group.MapDelete("/{id:guid}", async (
             Guid id,
-            AppDbContext db
+            WarehouseService warehouseService
         ) =>
         {
-            var warehouse = await db.Warehouses.FindAsync(id);
-
-            if (warehouse == null)
+            try
+            {
+                await warehouseService.DeleteWarehouseAsync(id);
+                return Results.NoContent();
+            } catch (KeyNotFoundException)
+            {
                 return Results.NotFound();
-            
-            db.Warehouses.Remove(warehouse);
-            await db.SaveChangesAsync();
-            return Results.NoContent();
+            }
         })
         .RequireAuthorization(policy => policy.RequireRole("Admin"))
         .WithSummary("Delete warehouse by id");

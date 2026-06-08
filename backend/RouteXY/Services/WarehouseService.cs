@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using RouteXY.Api.Data;
 using RouteXY.Api.Entities;
 using RouteXY.Api.Requests;
@@ -14,7 +15,7 @@ public class WarehouseService
         _db = db;
     }
 
-    public async Task<WarehouseResponse> AddWarehouse(CreateWarehouseRequest request)
+    public async Task<WarehouseResponse> AddWarehouseAsync(CreateWarehouseRequest request)
     {
         var warehouse = new Warehouse
         {
@@ -31,20 +32,49 @@ public class WarehouseService
         _db.Warehouses.Add(warehouse);
         await _db.SaveChangesAsync();
 
-        return new WarehouseResponse
-        {
-            Id = warehouse.Id,
-            Name = warehouse.Name,
-            Address = warehouse.Address,
-            City = warehouse.City,
-            Latitude = warehouse.Latitude,
-            Longitude = warehouse.Longitude,
-            IsActive = warehouse.IsActive,
-            CreatedAt = warehouse.CreatedAt
-        };
+        return MapToResponse(warehouse);
     }
 
-    public async Task<InventoryItemResponse> AddInventoryItem(CreateInventoryItemRequest request)
+    public async Task<List<WarehouseResponse>> GetAllAsync()
+    {
+        var warehouses = await _db.Warehouses
+            .Select(w => MapToResponse(w)).ToListAsync();
+        
+        return warehouses;
+    }
+
+    public async Task<WarehouseResponse?> GetByIdAsync(Guid id)
+    {
+        var warehouse = await _db.Warehouses.FindAsync(id);
+        
+        return warehouse == null ? null : MapToResponse(warehouse);
+    }
+
+    public async Task UpdateWarehouseAsync(Guid id, UpdateWarehouseRequest request)
+    {
+        var warehouse = await _db.Warehouses.FindAsync(id)
+            ?? throw new KeyNotFoundException("Warehouse not found");
+        
+        if (request.Name != null) warehouse.Name = request.Name;
+        if (request.Address != null) warehouse.Address = request.Address;
+        if (request.City != null) warehouse.City = request.City;
+        if (request.Latitude != null) warehouse.Latitude = request.Latitude;
+        if (request.Longitude != null) warehouse.Longitude = request.Longitude;
+        if (request.IsActive != null) warehouse.IsActive = (bool)request.IsActive;
+
+        await _db.SaveChangesAsync();
+    }
+
+    public async Task DeleteWarehouseAsync(Guid id)
+    {
+        var warehouse = await _db.Warehouses.FindAsync(id)
+            ?? throw new KeyNotFoundException("Warehouse not found");
+        
+        _db.Remove(warehouse);
+        await _db.SaveChangesAsync();
+    }
+
+    public async Task<InventoryItemResponse> AddInventoryItemAsync(CreateInventoryItemRequest request)
     {
         var item = new InventoryItem
         {
@@ -72,4 +102,16 @@ public class WarehouseService
             Category = item.Category
         };
     }
+
+    private static WarehouseResponse MapToResponse(Warehouse w) => new()
+    {
+        Id = w.Id,
+        Name = w.Name,
+        Address = w.Address,
+        City = w.City,
+        Latitude = w.Latitude,
+        Longitude = w.Longitude,
+        IsActive = w.IsActive,
+        CreatedAt = w.CreatedAt
+    };
 }
