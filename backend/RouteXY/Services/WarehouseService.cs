@@ -74,35 +74,6 @@ public class WarehouseService
         await _db.SaveChangesAsync();
     }
 
-    public async Task<InventoryItemResponse> AddInventoryItemAsync(CreateInventoryItemRequest request)
-    {
-        var item = new InventoryItem
-        {
-            Id = Guid.NewGuid(),
-            WarehouseId = request.WarehouseId,
-            Name = request.Name,
-            Description = request.Description,
-            Quantity = request.Quantity,
-            Unit = request.Unit,
-            Category = request.Category,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
-
-        _db.InventoryItems.Add(item);
-        await _db.SaveChangesAsync();
-        return new InventoryItemResponse
-        {
-            Id = item.Id,
-            WarehouseId = item.WarehouseId,
-            Name = item.Name,
-            Description = item.Description,
-            Quantity = item.Quantity,
-            Unit = item.Unit,
-            Category = item.Category
-        };
-    }
-
     private static WarehouseResponse MapToResponse(Warehouse w) => new()
     {
         Id = w.Id,

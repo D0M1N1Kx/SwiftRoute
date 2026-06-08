@@ -80,6 +80,7 @@ builder.Services.AddSingleton<TokenService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<WarehouseService>();
 builder.Services.AddScoped<OrderService>();
+builder.Services.AddScoped<InventoryService>();
 
 var app = builder.Build();
 

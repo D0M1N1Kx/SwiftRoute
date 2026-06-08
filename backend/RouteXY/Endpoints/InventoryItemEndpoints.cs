@@ -16,7 +16,7 @@ public static class InventoryItemEndpoints
 
         group.MapPost("/", async (
             CreateInventoryItemRequest request,
-            WarehouseService service,
+            InventoryService service,
             IValidator<CreateInventoryItemRequest> validator
         ) =>
         {
@@ -27,7 +27,7 @@ public static class InventoryItemEndpoints
             
             try
             {
-                var response = await service.AddInventoryItemAsync(request);
+                var response = await service.AddItemAsync(request);
                 return Results.Ok(response);
             }
             catch (UnauthorizedAccessException)
