@@ -76,7 +76,7 @@ public static class InventoryItemEndpoints
         group.MapPatch("/item/{id:guid}", async (
             Guid id,
             UpdateInventoryItemRequest request,
-            AppDbContext db,
+            InventoryService inventoryService,
             IValidator<UpdateInventoryItemRequest> validator
         ) =>
         {
@@ -84,22 +84,13 @@ public static class InventoryItemEndpoints
 
             if (!validation.IsValid)
                 return Results.ValidationProblem(validation.ToDictionary());
-            
-            var item = await db.InventoryItems.FindAsync(id);
 
-            if (item == null)
+            try {
+                var item = await inventoryService.UpdateItemByIdAsync(id, request);
+                return Results.Ok(item);
+            } catch (KeyNotFoundException) {
                 return Results.NotFound();
-            
-            if (request.Name != null) item.Name = request.Name;
-            if (request.Description != null) item.Description = request.Description;
-            if (request.Quantity != null) item.Quantity = (int)request.Quantity;
-            if (request.Unit != null) item.Unit = request.Unit;
-            if (request.Category != null) item.Category = request.Category;
-
-            item.UpdatedAt = DateTime.UtcNow;
-
-            await db.SaveChangesAsync();
-            return Results.Ok(item);
+            }
         })
         .RequireAuthorization(policy => policy.RequireRole("Admin", "Dispatcher"))
         .WithSummary("Update item by id");

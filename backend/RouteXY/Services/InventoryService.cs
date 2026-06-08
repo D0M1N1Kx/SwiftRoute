@@ -63,6 +63,23 @@ public class InventoryService
         await _db.SaveChangesAsync();
     }
 
+    public async Task<InventoryItemResponse> UpdateItemByIdAsync(Guid id, UpdateInventoryItemRequest request)
+    {
+        var item = await _db.InventoryItems.FindAsync(id)
+            ?? throw new KeyNotFoundException("Item not found");
+        
+        if (request.Name != null) item.Name = request.Name;
+        if (request.Description != null) item.Description = request.Description;
+        if (request.Quantity != null) item.Quantity = (int)request.Quantity;
+        if (request.Unit != null) item.Unit = request.Unit;
+        if (request.Category != null) item.Category = request.Category;
+
+        item.UpdatedAt = DateTime.UtcNow;
+
+        await _db.SaveChangesAsync();
+        return MapToResponse(item);
+    }
+
     private static InventoryItemResponse MapToResponse(InventoryItem i) => new()
     {
         Id = i.Id,
