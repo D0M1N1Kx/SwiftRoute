@@ -46,6 +46,14 @@ public class InventoryService
             .ToListAsync();
     }
 
+    public async Task<InventoryItemResponse> GetItemByIdAsync(Guid id)
+    {
+        var i = await _db.InventoryItems.FindAsync(id)
+            ?? throw new KeyNotFoundException("Item not found");
+        
+        return MapToResponse(i);
+    }
+
     private static InventoryItemResponse MapToResponse(InventoryItem i) => new()
     {
         Id = i.Id,
