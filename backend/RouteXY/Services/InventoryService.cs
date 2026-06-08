@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using RouteXY.Api.Data;
 using RouteXY.Api.Entities;
 using RouteXY.Api.Requests;
@@ -32,6 +33,17 @@ public class InventoryService
         _db.InventoryItems.Add(item);
         await _db.SaveChangesAsync();
         return MapToResponse(item);
+    }
+
+    public async Task<List<InventoryItemResponse>> GetInventoryByIdAsync(Guid id)
+    {
+        var w = await _db.Warehouses.FindAsync(id)
+            ?? throw new KeyNotFoundException("Warehouse not found");
+        
+        return await _db.InventoryItems
+            .Where(i => i.WarehouseId == id)
+            .Select(i => MapToResponse(i))
+            .ToListAsync();
     }
 
     private static InventoryItemResponse MapToResponse(InventoryItem i) => new()

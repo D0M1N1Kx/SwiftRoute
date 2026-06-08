@@ -32,26 +32,17 @@ public static class InventoryItemEndpoints
 
         group.MapGet("/{warehouse:guid}", async (
             Guid warehouse,
-            AppDbContext db
+            InventoryService inventoryService
         ) =>
         {
-            var w = await db.Warehouses.FindAsync(warehouse);
-
-            if (w == null)
-                return Results.NotFound();
-            
-            var inventory = await db.InventoryItems.Select(i => new InventoryItemResponse
+            try
             {
-                Id = i.Id,
-                WarehouseId = i.WarehouseId,
-                Name = i.Name,
-                Description = i.Description,
-                Quantity = i.Quantity,
-                Unit = i.Unit,
-                Category = i.Category
-            }).ToListAsync();
-
-            return Results.Ok(inventory);
+                var response = await inventoryService.GetInventoryByIdAsync(warehouse);
+                return Results.Ok(response);
+            } catch (KeyNotFoundException)
+            {
+                return Results.NotFound();
+            }
         })
         .WithSummary("Get warehouse's inventory by id");
 
