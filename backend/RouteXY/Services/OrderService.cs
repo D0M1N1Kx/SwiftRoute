@@ -90,6 +90,32 @@ public class OrderService
         await _db.SaveChangesAsync();
     }
 
+    public async Task UpdateStatusAsync(Guid orderId, OrderStatus newStatus, string? note, Guid changedBy)
+    {
+        var order = await _db.Orders.FindAsync(orderId)
+            ?? throw new KeyNotFoundException("Order not found");
+        
+        var oldStatus = order.Status;
+        order.Status = newStatus;
+        order.UpdatedAt = DateTime.UtcNow;
+
+        if (newStatus == OrderStatus.Delivered)
+            order.DeliveredAt = DateTime.UtcNow;
+        
+        _db.OrderStatusHistories.Add(new OrderStatusHistory
+        {
+            Id = Guid.NewGuid(),
+            OrderId = orderId,
+            ChangedBy = changedBy,
+            OldStatus = oldStatus,
+            NewStatus = newStatus,
+            Note = note,
+            ChangedAt = DateTime.UtcNow
+        });
+
+        await _db.SaveChangesAsync();
+    }
+
     private static OrderResponse MapToResponse(Order o) => new()
     {
         Id = o.Id,
