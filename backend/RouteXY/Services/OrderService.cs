@@ -116,6 +116,15 @@ public class OrderService
         await _db.SaveChangesAsync();
     }
 
+    public async Task DeleteAsync(Guid orderId)
+    {
+        var order = await _db.Orders.FindAsync(orderId)
+            ?? throw new KeyNotFoundException("Order not found");
+        
+        _db.Orders.Remove(order);
+        await _db.SaveChangesAsync();
+    }
+
     private static OrderResponse MapToResponse(Order o) => new()
     {
         Id = o.Id,
