@@ -22,7 +22,7 @@ public static class OrderEndpoints
         group.MapGet("/{id:guid}", async (Guid id, OrderService orderService) =>
         {
             var order = await orderService.GetByIdAsync(id);
-            return order == null ? Results.NotFound() : Results.Ok();
+            return order == null ? Results.NotFound() : Results.Ok(order);
         })
         .WithSummary("Get order by ID");
 
@@ -96,7 +96,7 @@ public static class OrderEndpoints
 
             try
             {
-                await orderService.UpdateStatusAsync(id, request.Status, request.Note, userId);
+                await orderService.UpdateStatusAsync(id, request.Status, request.Note ?? null, userId);
                 return Results.NoContent();
             } catch (KeyNotFoundException)
             {

@@ -98,6 +98,7 @@ public class OrderService
         var oldStatus = order.Status;
         order.Status = newStatus;
         order.UpdatedAt = DateTime.UtcNow;
+        if (note != null) order.Notes = note;
 
         if (newStatus == OrderStatus.Delivered)
             order.DeliveredAt = DateTime.UtcNow;
