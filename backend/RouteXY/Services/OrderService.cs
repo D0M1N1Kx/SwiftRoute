@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using RouteXY.Api.Data;
 using RouteXY.Api.Entities;
+using RouteXY.Api.Enums;
+using RouteXY.Api.Requests;
 using RouteXY.Api.Responses;
 
 namespace RouteXY.Api.Services;
@@ -31,6 +33,32 @@ public class OrderService
             .FirstOrDefaultAsync(o => o.Id == id);
         
         return order == null ? null : MapToResponse(order);
+    }
+
+    public async Task<Order> CreateAsync(CreateOrderRequest request, Guid dispatcherId)
+    {
+        var order = new Order
+        {
+            Id = Guid.NewGuid(),
+            TrackingNumber = GenerateTrackingNumber(),
+            DispatcherId = dispatcherId,
+            RecipientName = request.RecipientName,
+            RecipientPhone = request.RecipientPhone,
+            PickupAddress = request.PickupAddress,
+            PickupLat = request.PickupLat,
+            PickupLng = request.PickupLng,
+            DeliveryAddress = request.DeliveryAddress,
+            DeliveryLat = request.DeliveryLat,
+            DeliveryLng = request.DeliveryLng,
+            WarehouseId = request.WarehouseId,
+            InventoryItemId = request.InventoryItemId,
+            Notes = request.Notes,
+            Status = OrderStatus.Pending
+        };
+
+        _db.Orders.Add(order);
+        await _db.SaveChangesAsync();
+        return order;
     }
 
     private static OrderResponse MapToResponse(Order o) => new()
