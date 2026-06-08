@@ -61,6 +61,35 @@ public class OrderService
         return order;
     }
 
+    public async Task AssignCourierAsync(Guid orderId, Guid courierId, Guid changedBy)
+    {
+        var order = await _db.Orders.FindAsync(orderId)
+            ?? throw new KeyNotFoundException("Order not found");
+        
+        var courier = await _db.Users.FindAsync(courierId)
+            ?? throw new KeyNotFoundException("Courier not found");
+        
+        if (courier.Role != UserRole.Courier)
+            throw new InvalidOperationException("User is not a courier");
+        
+        var oldStatus = order.Status;
+        order.CourierId = courierId;
+        order.Status = OrderStatus.Assigned;
+        order.UpdatedAt = DateTime.UtcNow;
+
+        _db.OrderStatusHistories.Add(new OrderStatusHistory
+        {
+            Id = Guid.NewGuid(),
+            OrderId = orderId,
+            ChangedBy = changedBy,
+            OldStatus = oldStatus,
+            NewStatus = OrderStatus.Assigned,
+            ChangedAt = DateTime.UtcNow
+        });
+
+        await _db.SaveChangesAsync();
+    }
+
     private static OrderResponse MapToResponse(Order o) => new()
     {
         Id = o.Id,
