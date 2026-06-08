@@ -23,6 +23,16 @@ public class OrderService
             .ToListAsync();
     }
 
+    public async Task<OrderResponse?> GetByIdAsync(Guid id)
+    {
+        var order = await _db.Orders
+            .Include(o => o.Dispatcher)
+            .Include(o => o.Courier)
+            .FirstOrDefaultAsync(o => o.Id == id);
+        
+        return order == null ? null : MapToResponse(order);
+    }
+
     private static OrderResponse MapToResponse(Order o) => new()
     {
         Id = o.Id,
