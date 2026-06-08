@@ -35,12 +35,10 @@ public static class InventoryItemEndpoints
             InventoryService inventoryService
         ) =>
         {
-            try
-            {
+            try {
                 var response = await inventoryService.GetInventoryByIdAsync(warehouse);
                 return Results.Ok(response);
-            } catch (KeyNotFoundException)
-            {
+            } catch (KeyNotFoundException) {
                 return Results.NotFound();
             }
         })
@@ -51,12 +49,10 @@ public static class InventoryItemEndpoints
             InventoryService inventoryService
         ) =>
         {
-            try
-            {
+            try {
                 var i = await inventoryService.GetItemByIdAsync(item);
                 return Results.Ok(i);
-            } catch (KeyNotFoundException)
-            {
+            } catch (KeyNotFoundException) {
                 return Results.NotFound();
             }
         })
@@ -64,18 +60,15 @@ public static class InventoryItemEndpoints
 
         group.MapDelete("/item/{i:guid}", async (
             Guid i,
-            AppDbContext db
+            InventoryService inventoryService
         ) =>
         {
-            var item = await db.InventoryItems.FindAsync(i);
-
-            if (item == null)
+            try {
+                await inventoryService.DeleteItemByIdAsync(i);
+                return Results.NoContent();
+            } catch (KeyNotFoundException) {
                 return Results.NotFound();
-            
-            db.Remove(item);
-            await db.SaveChangesAsync();
-
-            return Results.NoContent();
+            }
         })
         .RequireAuthorization(policy => policy.RequireRole("Admin", "Dispatcher"))
         .WithSummary("Delete item by id");

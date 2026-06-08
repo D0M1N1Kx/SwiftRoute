@@ -54,6 +54,15 @@ public class InventoryService
         return MapToResponse(i);
     }
 
+    public async Task DeleteItemByIdAsync(Guid id)
+    {
+        var i = await _db.InventoryItems.FindAsync(id)
+            ?? throw new KeyNotFoundException("Item not found");
+        
+        _db.InventoryItems.Remove(i);
+        await _db.SaveChangesAsync();
+    }
+
     private static InventoryItemResponse MapToResponse(InventoryItem i) => new()
     {
         Id = i.Id,
