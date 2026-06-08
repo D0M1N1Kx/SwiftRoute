@@ -35,7 +35,7 @@ public static class InventoryItemEndpoints
                 return Results.Unauthorized();
             }
         })
-        .RequireAuthorization(policy => policy.RequireRole(new string[] { "Admin", "Dispatcher" }))
+        .RequireAuthorization(policy => policy.RequireRole("Admin", "Dispatcher"))
         .WithSummary("Add inventory item");
 
         group.MapGet("/{warehouse:guid}", async (
@@ -92,7 +92,7 @@ public static class InventoryItemEndpoints
 
             return Results.NoContent();
         })
-        .RequireAuthorization(policy => policy.RequireRole(new string[] { "Admin", "Dispatcher" }))
+        .RequireAuthorization(policy => policy.RequireRole("Admin", "Dispatcher"))
         .WithSummary("Delete item by id");
 
         group.MapPatch("/item/{id:guid}", async (
@@ -123,7 +123,7 @@ public static class InventoryItemEndpoints
             await db.SaveChangesAsync();
             return Results.Ok(item);
         })
-        .RequireAuthorization(policy => policy.RequireRole(new string[] { "Admin", "Dispatcher" }))
+        .RequireAuthorization(policy => policy.RequireRole("Admin", "Dispatcher"))
         .WithSummary("Update item by id");
     }
 }
