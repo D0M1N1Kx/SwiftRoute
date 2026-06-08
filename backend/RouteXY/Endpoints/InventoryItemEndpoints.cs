@@ -27,7 +27,7 @@ public static class InventoryItemEndpoints
             
             try
             {
-                var response = await service.AddInventoryItem(request);
+                var response = await service.AddInventoryItemAsync(request);
                 return Results.Ok(response);
             }
             catch (UnauthorizedAccessException)
