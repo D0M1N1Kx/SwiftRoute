@@ -11,7 +11,7 @@ public static class WarehouseEndpoints
 {
     public static void MapWarehouseEndpoints(this WebApplication app)
     {
-        var group = app.MapGroup("/warehouse");
+        var group = app.MapGroup("/warehouse").RequireAuthorization();
 
         group.MapPost("/", async (
             CreateWarehouseRequest request,
@@ -52,7 +52,6 @@ public static class WarehouseEndpoints
 
             return Results.Ok(warehouses);
         })
-        .RequireAuthorization()
         .WithSummary("Get all warehouses");
 
         group.MapGet("/{id:guid}", async (
@@ -67,7 +66,6 @@ public static class WarehouseEndpoints
             
             return Results.Ok(warehouse);
         })
-        .RequireAuthorization()
         .WithSummary("Get warehouse by id");
 
         group.MapPatch("/{id:guid}", async (

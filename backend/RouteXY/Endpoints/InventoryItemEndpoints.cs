@@ -12,7 +12,7 @@ public static class InventoryItemEndpoints
 {
     public static void MapInventoryItemEndpoints(this WebApplication app)
     {
-        var group = app.MapGroup("/inventory");
+        var group = app.MapGroup("/inventory").RequireAuthorization();
 
         group.MapPost("/", async (
             CreateInventoryItemRequest request,
@@ -61,7 +61,6 @@ public static class InventoryItemEndpoints
 
             return Results.Ok(inventory);
         })
-        .RequireAuthorization()
         .WithSummary("Get warehouse's inventory by id");
 
         group.MapGet("/item/{item:guid}", async (
@@ -76,7 +75,6 @@ public static class InventoryItemEndpoints
 
             return Results.Ok(i);
         })
-        .RequireAuthorization()
         .WithSummary("Get inventory item by id");
 
         group.MapDelete("/item/{i:guid}", async (
