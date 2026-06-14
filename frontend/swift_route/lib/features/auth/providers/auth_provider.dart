@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:swift_route/core/api/api_client.dart';
 import 'package:swift_route/core/api/api_endpoints.dart';
