@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:swift_route/features/auth/providers/auth_provider.dart';
+import 'package:swift_route/features/auth/screens/LoginScreen.dart';
 import 'package:swift_route/features/home/widgets/SideNav.dart';
 
 import '../models/NavItem.dart';
@@ -30,17 +32,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     const Center(child: Text('Warehouses')),
     const Center(child: Text('Users')),
   ];
-
-  @override
-  Widget build(BuildContext context) {
-    final isDesktop = MediaQuery.of(context).size.width >= 600;
-
-    return Scaffold(
-      body: isDesktop ? _buildDesktopLayout() : _buildMobileLayout(),
+  
+  void _logout() {
+    ref.read(authProvider.notifier).logout();
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
     );
   }
 
-  Widget _buildDesktopLayout() {
+  @override
+  Widget build(BuildContext context) {
+    final authState = ref.watch(authProvider);
+    final isDesktop = MediaQuery.of(context).size.width >= 600;
+    
+    if (authState.data == null) return const SizedBox();
+
+    return Scaffold(
+      body: isDesktop ? _buildDesktopLayout(authState) : _buildMobileLayout(authState),
+    );
+  }
+
+  Widget _buildDesktopLayout(AuthState authState) {
     return Row(
       children: [
         SideNav(
@@ -48,14 +60,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             items: _navItems,
             onDestinationSelected: (index) {
               setState(() => _selectedIndex = index);
-            }),
+            },
+            authData: authState.data!,
+            onLogout: _logout
+          ),
         const VerticalDivider(thickness: 1, width: 1),
         Expanded(child: _screens[_selectedIndex])
       ],
     );
   }
 
-  Widget _buildMobileLayout() {
+  Widget _buildMobileLayout(AuthState authState) {
     return Scaffold(
       body: _screens[_selectedIndex],
       bottomNavigationBar: BottomNav(
