@@ -29,7 +29,7 @@ class SideNav extends StatelessWidget {
             if (MediaQuery.of(context).size.width >= 900)
               const Text(
                 'RouteXY',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
               ),
           ],
         ),
