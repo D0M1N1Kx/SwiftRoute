@@ -58,7 +58,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
         errorMessage: null,
       );
     } on DioException catch (e) {
-      final message = e.response?.statusCode == 401
+      print('Status: ${e.response?.statusCode}');
+      print('Data: ${e.response?.data}');
+      print('Message: ${e.message}');
+      final message = e.response?.statusCode == 401 || e.response?.statusCode == 400
           ? 'Invalid email or password'
           : 'Something went wrong, please try again';
 

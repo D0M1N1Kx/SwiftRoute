@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'features/auth/screens/LoginScreen.dart';
+
 void main() async {
   await dotenv.load(fileName: '.env');
   runApp(const ProviderScope(
@@ -23,7 +25,7 @@ class MainApp extends StatelessWidget {
       ),
       home: Scaffold(
         body: Center(
-          child: Text('Hello World!'),
+          child: LoginScreen(),
         ),
       ),
     );
