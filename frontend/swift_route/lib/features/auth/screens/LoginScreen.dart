@@ -24,10 +24,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> _login() async {
-    await ref.read(authProvider.notifier).login(
-      _emailController.text.trim(),
-      _passwordController.text.trim()
-    );
+    await ref
+        .read(authProvider.notifier)
+        .login(_emailController.text.trim(), _passwordController.text.trim());
   }
 
   @override
@@ -55,10 +54,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               children: [
                 const Text(
                   'RouteXY',
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
@@ -118,9 +114,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             height: 20,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : const Text('Login')
+                        : const Text('Login'),
                   ),
-                )
+                ),
               ],
             ),
           ),

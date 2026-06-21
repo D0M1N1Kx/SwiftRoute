@@ -13,11 +13,7 @@ class AuthState {
   final AuthModel? data;
   final String? errorMessage;
 
-  AuthState({
-    required this.status,
-    this.data,
-    this.errorMessage
-  });
+  AuthState({required this.status, this.data, this.errorMessage});
 
   AuthState copyWith({
     AuthStatus? status,
@@ -43,14 +39,14 @@ class AuthNotifier extends StateNotifier<AuthState> {
     try {
       final response = await _apiClient.dio.post(
         ApiEndpoints.login,
-        data: {
-          'email': email,
-          'password': password
-        },
+        data: {'email': email, 'password': password},
       );
 
       final loginResponse = AuthModel.fromJson(response.data);
-      _apiClient.setTokens(loginResponse.accessToken, loginResponse.refreshToken);
+      _apiClient.setTokens(
+        loginResponse.accessToken,
+        loginResponse.refreshToken,
+      );
 
       state = state.copyWith(
         status: AuthStatus.authenticated,
@@ -58,14 +54,12 @@ class AuthNotifier extends StateNotifier<AuthState> {
         errorMessage: null,
       );
     } on DioException catch (e) {
-      final message = e.response?.statusCode == 401 || e.response?.statusCode == 400
+      final message =
+          e.response?.statusCode == 401 || e.response?.statusCode == 400
           ? 'Invalid email or password'
           : 'Something went wrong, please try again';
 
-      state = state.copyWith(
-        status: AuthStatus.error,
-        errorMessage: message
-      );
+      state = state.copyWith(status: AuthStatus.error, errorMessage: message);
     }
   }
 

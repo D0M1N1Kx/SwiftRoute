@@ -11,7 +11,7 @@ class BottomNav extends StatelessWidget {
     super.key,
     required this.selectedIndex,
     required this.items,
-    required this.onDestinationSelected
+    required this.onDestinationSelected,
   });
 
   @override
@@ -20,10 +20,7 @@ class BottomNav extends StatelessWidget {
       selectedIndex: selectedIndex,
       onDestinationSelected: onDestinationSelected,
       destinations: items.map((item) {
-        return NavigationDestination(
-          icon: Icon(item.icon),
-          label: item.label,
-        );
+        return NavigationDestination(icon: Icon(item.icon), label: item.label);
       }).toList(),
     );
   }

@@ -6,9 +6,7 @@ import 'features/auth/screens/LoginScreen.dart';
 
 void main() async {
   await dotenv.load(fileName: '.env');
-  runApp(const ProviderScope(
-    child: MainApp(),
-  ));
+  runApp(const ProviderScope(child: MainApp()));
 }
 
 class MainApp extends StatelessWidget {
@@ -23,11 +21,7 @@ class MainApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: Scaffold(
-        body: Center(
-          child: LoginScreen(),
-        ),
-      ),
+      home: Scaffold(body: Center(child: LoginScreen())),
     );
   }
 }

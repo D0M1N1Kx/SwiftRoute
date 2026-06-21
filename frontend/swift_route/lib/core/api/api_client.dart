@@ -12,23 +12,24 @@ class ApiClient {
   bool _isRefreshing = false;
 
   ApiClient() {
-    dio = Dio(BaseOptions(
-      baseUrl: baseUrl,
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 10),
-      headers: {'Content-Type': 'application/json'},
-    ));
+    dio = Dio(
+      BaseOptions(
+        baseUrl: baseUrl,
+        connectTimeout: const Duration(seconds: 10),
+        receiveTimeout: const Duration(seconds: 10),
+        headers: {'Content-Type': 'application/json'},
+      ),
+    );
 
-    _refreshDio = Dio(BaseOptions(
-      baseUrl: baseUrl,
-      headers: {'Content-Type': 'application/json'},
-    ));
+    _refreshDio = Dio(
+      BaseOptions(
+        baseUrl: baseUrl,
+        headers: {'Content-Type': 'application/json'},
+      ),
+    );
 
     dio.interceptors.add(
-      InterceptorsWrapper(
-        onRequest: _onRequest,
-        onError: _onError
-      ),
+      InterceptorsWrapper(onRequest: _onRequest, onError: _onError),
     );
   }
 
@@ -50,10 +51,12 @@ class ApiClient {
   }
 
   Future<void> _onError(
-      DioException err,
-      ErrorInterceptorHandler handler,
-      ) async {
-    if (err.response?.statusCode != 401 || _refreshToken == null || _isRefreshing) {
+    DioException err,
+    ErrorInterceptorHandler handler,
+  ) async {
+    if (err.response?.statusCode != 401 ||
+        _refreshToken == null ||
+        _isRefreshing) {
       handler.next(err);
       return;
     }

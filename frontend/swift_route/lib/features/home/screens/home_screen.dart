@@ -32,23 +32,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     const Center(child: Text('Warehouses')),
     const Center(child: Text('Users')),
   ];
-  
+
   void _logout() {
     ref.read(authProvider.notifier).logout();
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const LoginScreen()),
-    );
+    Navigator.of(
+      context,
+    ).pushReplacement(MaterialPageRoute(builder: (_) => const LoginScreen()));
   }
 
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
     final isDesktop = MediaQuery.of(context).size.width >= 600;
-    
+
     if (authState.data == null) return const SizedBox();
 
     return Scaffold(
-      body: isDesktop ? _buildDesktopLayout(authState) : _buildMobileLayout(authState),
+      body: isDesktop
+          ? _buildDesktopLayout(authState)
+          : _buildMobileLayout(authState),
     );
   }
 
@@ -56,16 +58,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Row(
       children: [
         SideNav(
-            selectedIndex: _selectedIndex,
-            items: _navItems,
-            onDestinationSelected: (index) {
-              setState(() => _selectedIndex = index);
-            },
-            authData: authState.data!,
-            onLogout: _logout
-          ),
+          selectedIndex: _selectedIndex,
+          items: _navItems,
+          onDestinationSelected: (index) {
+            setState(() => _selectedIndex = index);
+          },
+          authData: authState.data!,
+          onLogout: _logout,
+        ),
         const VerticalDivider(thickness: 1, width: 1),
-        Expanded(child: _screens[_selectedIndex])
+        Expanded(child: _screens[_selectedIndex]),
       ],
     );
   }
@@ -78,7 +80,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         items: _navItems,
         onDestinationSelected: (index) {
           setState(() => _selectedIndex = index);
-        }
+        },
       ),
     );
   }

@@ -8,7 +8,7 @@ class AuthModel {
   AuthModel({
     required this.accessToken,
     required this.refreshToken,
-    required this.user
+    required this.user,
   });
 
   factory AuthModel.fromJson(Map<String, dynamic> json) {

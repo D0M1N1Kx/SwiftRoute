@@ -14,7 +14,7 @@ class UserModel {
     required this.role,
     this.phone,
     required this.isActive,
-    required this.createdAt
+    required this.createdAt,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
