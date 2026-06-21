@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:swift_route/features/auth/providers/auth_provider.dart';
 import 'package:swift_route/features/auth/screens/LoginScreen.dart';
-import 'package:swift_route/features/home/widgets/SideNav.dart';
+import 'package:swift_route/features/home/widgets/Nav/side_nav.dart';
 
 import '../models/NavItem.dart';
-import '../widgets/BottomNav.dart';
+import '../widgets/Nav/bottom_nav.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
