@@ -90,6 +90,10 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> {
             _buildOverview(state),
 
             const SizedBox(height: 16),
+            /*_buildRolesStats(state),*/
+
+            const SizedBox(height: 16),
+            _buildOrderStats(state),
           ],
         ),
       ),
@@ -155,7 +159,7 @@ Widget _buildOrderStats(DashboardState state) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      const Text("Order Status", style: TextStyle(fontSize: 18)),
+      const Text("Order Status", style: TextStyle(fontWeight: FontWeight.bold)),
       const SizedBox(height: 12),
       Wrap(
         spacing: 10,
@@ -171,7 +175,7 @@ Widget _buildOrderStats(DashboardState state) {
       ),
     ],
   );
-}
+} // TODO: NEED TO BE FIXED LIKE ON THE IMAGE
 
 Color _statusColor(String status) {
   switch (status) {
