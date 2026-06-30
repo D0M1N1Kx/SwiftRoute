@@ -86,6 +86,9 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
         totalWarehouses: warehouses.length,
       );
     } on DioException catch (e) {
+      print('DIO ERROR: ${e.message}');
+      print('RESPONSE: ${e.response?.data}');
+      print('STATUS: ${e.response?.statusCode}');
       state = state.copyWith(
         isLoading: false,
         error: 'Failed to load dashboard data',

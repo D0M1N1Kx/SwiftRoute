@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:swift_route/features/auth/providers/auth_provider.dart';
+import 'package:swift_route/features/home/widgets/Dashboard/admin_dashboard.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -11,7 +12,7 @@ class DashboardScreen extends ConsumerWidget {
     final role = authState.data?.user.role ?? '';
 
     return switch (role) {
-      'Admin' => const Center(child: Text('Admin Dashboard')),
+      'Admin' => const AdminDashboard(),
       'Dispatcher' => const Center(child: Text('Dispatcher Dashboard')),
       'Courier' => const Center(child: Text('Courier Dashboard')),
       'WarehouseStaff' => const Center(

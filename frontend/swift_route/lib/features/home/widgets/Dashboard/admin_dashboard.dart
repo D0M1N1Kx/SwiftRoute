@@ -54,7 +54,7 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> {
           ref.read(dashboardProvider.notifier).loadAdminDashboard(),
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -77,40 +77,40 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> {
               children: [
                 StatCard(
                   icon: Icons.receipt_long_outlined,
-                  label: 'Total Orders',
+                  title: 'Total Orders',
                   value: _totalOrders(state).toString(),
                   color: Colors.blue,
                   subtitle: '${state.orderStats['pending'] ?? 0} pending',
                 ),
                 StatCard(
                   icon: Icons.local_shipping_outlined,
-                  label: 'In Transit',
+                  title: 'In Transit',
                   value: (state.orderStats['in_transit'] ?? 0).toString(),
                   color: Colors.indigo,
                   subtitle: '${state.orderStats['assigned'] ?? 0} assigned',
                 ),
                 StatCard(
                   icon: Icons.check_circle_outlined,
-                  label: 'Delivered',
+                  title: 'Delivered',
                   value: (state.orderStats['delivered'] ?? 0).toString(),
                   color: Colors.green,
                 ),
                 StatCard(
                   icon: Icons.people_outlined,
-                  label: 'Active Couriers',
+                  title: 'Active Couriers',
                   value: state.activeCouriers.toString(),
                   color: Colors.orange,
                   subtitle: '${state.totalUsers} total users',
                 ),
                 StatCard(
                   icon: Icons.warehouse_outlined,
-                  label: 'Warehouses',
+                  title: 'Warehouses',
                   value: state.totalWarehouses.toString(),
                   color: Colors.purple,
                 ),
                 StatCard(
                   icon: Icons.error_outline,
-                  label: 'Failed / Cancelled',
+                  title: 'Failed / Cancelled',
                   value:
                       ((state.orderStats['failed'] ?? 0) +
                               (state.orderStats['cancelled'] ?? 0))
@@ -170,4 +170,41 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> {
     if (width > 800) return 2;
     return 1;
   }
+}
+
+Widget _buildOverview(DashboardState state) {
+  return GridView.count(
+    crossAxisCount: 2,
+    shrinkWrap: true,
+    physics: const NeverScrollableScrollPhysics(),
+    crossAxisSpacing: 12,
+    mainAxisSpacing: 12,
+    childAspectRatio: 1.6,
+    children: [
+      StatCard(
+        title: "Users",
+        value: state.totalUsers.toString(),
+        icon: Icons.people,
+        color: Colors.blue,
+      ),
+      StatCard(
+        title: "Active Couriers",
+        value: state.activeCouriers.toString(),
+        icon: Icons.delivery_dining,
+        color: Colors.green,
+      ),
+      StatCard(
+        title: "Warehouses",
+        value: state.totalWarehouses.toString(),
+        icon: Icons.warehouse,
+        color: Colors.purple,
+      ),
+      StatCard(
+        title: "Total Orders",
+        value: state.orderStats.values.fold(0, (a, b) => a + b).toString(),
+        icon: Icons.inventory,
+        color: Colors.orange,
+      ),
+    ],
+  );
 }

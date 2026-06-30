@@ -15,7 +15,7 @@ class ApiEndpoints {
 
   static String updateOrderStatus(String id) => '/orders/$id/status';
 
-  static const String warehouses = '/warehouses';
+  static const String warehouses = '/warehouse';
 
   static String warehouseById(String id) => '/warehouses/$id';
 
