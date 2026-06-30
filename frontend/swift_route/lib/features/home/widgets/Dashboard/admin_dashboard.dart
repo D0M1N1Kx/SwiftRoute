@@ -201,10 +201,55 @@ Widget _buildOverview(DashboardState state) {
       ),
       StatCard(
         title: "Total Orders",
-        value: state.orderStats.values.fold(0, (a, b) => a + b).toString(),
+        value: state.orderStats.values
+            .fold(0, (sum, count) => sum + count)
+            .toString(),
         icon: Icons.inventory,
         color: Colors.orange,
       ),
     ],
   );
+}
+
+Widget _buildOrderStats(DashboardState state) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Text("Order Status", style: TextStyle(fontSize: 18)),
+      const SizedBox(height: 12),
+      Wrap(
+        spacing: 10,
+        runSpacing: 10,
+        children: state.orderStats.entries.map((e) {
+          return StatCard(
+            title: e.key,
+            value: e.value.toString(),
+            icon: Icons.circle,
+            color: _statusColor(e.key),
+          );
+        }).toList(),
+      ),
+    ],
+  );
+}
+
+Color _statusColor(String status) {
+  switch (status) {
+    case 'Pending':
+      return Colors.grey;
+    case 'Assigned':
+      return Colors.blue;
+    case 'PickedUp':
+      return Colors.orange;
+    case 'InTransit':
+      return Colors.indigo;
+    case 'Delivered':
+      return Colors.green;
+    case 'Failed':
+      return Colors.red;
+    case 'Cancelled':
+      return Colors.black54;
+    default:
+      return Colors.grey;
+  }
 }
