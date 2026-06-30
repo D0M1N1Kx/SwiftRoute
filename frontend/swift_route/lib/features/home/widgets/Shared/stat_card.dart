@@ -19,7 +19,7 @@ class StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.only(left: 8.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -28,6 +28,8 @@ class StatCard extends StatelessWidget {
         ],
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           CircleAvatar(
             backgroundColor: color.withOpacity(0.1),
@@ -36,8 +38,10 @@ class StatCard extends StatelessWidget {
           const SizedBox(width: 12),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
             children: [
-              Text(title, style: const TextStyle(fontSize: 12)),
+              Text(title, style: const TextStyle(fontSize: 11)),
               Text(
                 value,
                 style: const TextStyle(

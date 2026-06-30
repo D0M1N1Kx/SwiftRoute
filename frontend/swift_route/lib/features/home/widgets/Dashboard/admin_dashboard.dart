@@ -58,102 +58,38 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Dashboard',
-              style: Theme.of(
-                context,
-              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+            Padding(
+              padding: const EdgeInsets.only(top: 16.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Dashboard',
+                        style: Theme.of(context).textTheme.headlineSmall
+                            ?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        'Welcome back, USERNAME!',
+                        style: Theme.of(context).textTheme.labelMedium,
+                      ),
+                    ],
+                  ),
+                  Icon(Icons.account_circle, color: Colors.blue, size: 36.0),
+                ],
+              ),
             ),
-            const SizedBox(height: 24),
+            Divider(color: Colors.grey[400], thickness: 1),
 
             // Stat kártyák
-            GridView.count(
-              crossAxisCount: _crossAxisCount(context),
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-              childAspectRatio: 1.6,
-              children: [
-                StatCard(
-                  icon: Icons.receipt_long_outlined,
-                  title: 'Total Orders',
-                  value: _totalOrders(state).toString(),
-                  color: Colors.blue,
-                  subtitle: '${state.orderStats['pending'] ?? 0} pending',
-                ),
-                StatCard(
-                  icon: Icons.local_shipping_outlined,
-                  title: 'In Transit',
-                  value: (state.orderStats['in_transit'] ?? 0).toString(),
-                  color: Colors.indigo,
-                  subtitle: '${state.orderStats['assigned'] ?? 0} assigned',
-                ),
-                StatCard(
-                  icon: Icons.check_circle_outlined,
-                  title: 'Delivered',
-                  value: (state.orderStats['delivered'] ?? 0).toString(),
-                  color: Colors.green,
-                ),
-                StatCard(
-                  icon: Icons.people_outlined,
-                  title: 'Active Couriers',
-                  value: state.activeCouriers.toString(),
-                  color: Colors.orange,
-                  subtitle: '${state.totalUsers} total users',
-                ),
-                StatCard(
-                  icon: Icons.warehouse_outlined,
-                  title: 'Warehouses',
-                  value: state.totalWarehouses.toString(),
-                  color: Colors.purple,
-                ),
-                StatCard(
-                  icon: Icons.error_outline,
-                  title: 'Failed / Cancelled',
-                  value:
-                      ((state.orderStats['failed'] ?? 0) +
-                              (state.orderStats['cancelled'] ?? 0))
-                          .toString(),
-                  color: Colors.red,
-                ),
-              ],
-            ),
+            Text("Overview", style: TextStyle(fontWeight: FontWeight.bold)),
+            _buildOverview(state),
 
-            const SizedBox(height: 32),
-
-            SectionHeader(
-              title: 'Recent Orders',
-              action: TextButton(
-                onPressed: () {},
-                child: const Text('View all'),
-              ),
-            ),
-            const SizedBox(height: 12),
-
-            Card(
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-                side: BorderSide(
-                  color: Theme.of(context).colorScheme.outlineVariant,
-                ),
-              ),
-              child: state.recentOrders.isEmpty
-                  ? const Padding(
-                      padding: EdgeInsets.all(24),
-                      child: Center(child: Text('No orders yet')),
-                    )
-                  : ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: state.recentOrders.length,
-                      separatorBuilder: (_, __) => const Divider(height: 1),
-                      itemBuilder: (context, index) {
-                        return OrderListTile(order: state.recentOrders[index]);
-                      },
-                    ),
-            ),
+            const SizedBox(height: 16),
           ],
         ),
       ),
@@ -177,6 +113,7 @@ Widget _buildOverview(DashboardState state) {
     crossAxisCount: 2,
     shrinkWrap: true,
     physics: const NeverScrollableScrollPhysics(),
+    padding: EdgeInsets.only(top: 8.0),
     crossAxisSpacing: 12,
     mainAxisSpacing: 12,
     childAspectRatio: 1.6,
@@ -186,6 +123,7 @@ Widget _buildOverview(DashboardState state) {
         value: state.totalUsers.toString(),
         icon: Icons.people,
         color: Colors.blue,
+        subtitle: "Active: ${state.activeCouriers}",
       ),
       StatCard(
         title: "Active Couriers",
@@ -198,6 +136,7 @@ Widget _buildOverview(DashboardState state) {
         value: state.totalWarehouses.toString(),
         icon: Icons.warehouse,
         color: Colors.purple,
+        subtitle: "All",
       ),
       StatCard(
         title: "Total Orders",
@@ -206,6 +145,7 @@ Widget _buildOverview(DashboardState state) {
             .toString(),
         icon: Icons.inventory,
         color: Colors.orange,
+        subtitle: "All warehouses",
       ),
     ],
   );
