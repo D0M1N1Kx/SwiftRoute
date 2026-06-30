@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:swift_route/features/auth/providers/auth_provider.dart';
 import 'package:swift_route/features/auth/screens/LoginScreen.dart';
+import 'package:swift_route/features/home/screens/dashboard_screen.dart';
 import 'package:swift_route/features/home/widgets/Nav/side_nav.dart';
 
 import '../models/NavItem.dart';
@@ -26,7 +27,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   ];
 
   final List<Widget> _screens = [
-    const Center(child: Text('Dashboard')),
+    const DashboardScreen(),
     const Center(child: Text('Orders')),
     const Center(child: Text('Map')),
     const Center(child: Text('Warehouses')),
