@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:swift_route/features/auth/providers/auth_provider.dart';
-import 'package:swift_route/features/home/widgets/Dashboard/admin_dashboard.dart';
+import 'package:swift_route/features/dashboard/widgets/admin_dashboard.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});

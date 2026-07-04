@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/models/auth_model.dart';
-import '../../models/NavItem.dart';
+import '../../../core/models/auth_model.dart';
+import '../models/NavItem.dart';
 
 class SideNav extends StatelessWidget {
   final int selectedIndex;

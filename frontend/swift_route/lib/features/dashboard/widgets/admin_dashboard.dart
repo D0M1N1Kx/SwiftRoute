@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../providers/dashboard_provider.dart';
-import '../Shared/order_list_tile.dart';
-import '../Shared/section_header.dart';
-import '../Shared/stat_card.dart';
+import '../providers/dashboard_provider.dart';
+import '../../../core/widgets/order_list_tile.dart';
+import '../../../core/widgets/section_header.dart';
+import '../../../core/widgets/stat_card.dart';
 
 class AdminDashboard extends ConsumerStatefulWidget {
   const AdminDashboard({super.key});
@@ -90,8 +90,8 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> {
             _buildOverview(state),
 
             const SizedBox(height: 16),
-            /*_buildRolesStats(state),*/
 
+            /*_buildRolesStats(state),*/
             const SizedBox(height: 16),
             _buildOrderStats(state),
           ],

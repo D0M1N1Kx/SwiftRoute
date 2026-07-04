@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/models/order_model.dart';
+import '../models/order_model.dart';
 
 class OrderListTile extends StatelessWidget {
   final OrderModel order;
