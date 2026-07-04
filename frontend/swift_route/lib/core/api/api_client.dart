@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ApiClient {
   static String get baseUrl => dotenv.env['API_URL'] ?? 'http://localhost:5243';
@@ -7,8 +8,7 @@ class ApiClient {
   late final Dio dio;
   late final Dio _refreshDio;
 
-  String? _accessToken;
-  String? _refreshToken;
+  final _storage = const FlutterSecureStorage();
   bool _isRefreshing = false;
 
   ApiClient() {
@@ -33,19 +33,23 @@ class ApiClient {
     );
   }
 
-  void setTokens(String accessToken, String refreshToken) {
-    _accessToken = accessToken;
-    _refreshToken = refreshToken;
+  Future<void> setTokens(String accessToken, String refreshToken) async {
+    await _storage.write(key: 'access_token', value: accessToken);
+    await _storage.write(key: 'refresh_token', value: refreshToken);
   }
 
-  void clearTokens() {
-    _accessToken = null;
-    _refreshToken = null;
+  Future<void> clearTokens() async {
+    await _storage.delete(key: 'access_token');
+    await _storage.delete(key: 'refresh_token');
   }
 
-  void _onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    if (_accessToken != null) {
-      options.headers['Authorization'] = 'Bearer $_accessToken';
+  Future<void> _onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
+    final accessToken = await _storage.read(key: 'access_token');
+    if (accessToken != null) {
+      options.headers['Authorization'] = 'Bearer $accessToken';
     }
     handler.next(options);
   }
@@ -54,8 +58,10 @@ class ApiClient {
     DioException err,
     ErrorInterceptorHandler handler,
   ) async {
+    final refreshToken = await _storage.read(key: 'refresh_token');
+
     if (err.response?.statusCode != 401 ||
-        _refreshToken == null ||
+        refreshToken == null ||
         _isRefreshing) {
       handler.next(err);
       return;
@@ -66,17 +72,20 @@ class ApiClient {
     try {
       final response = await _refreshDio.post(
         '/auth/refresh',
-        data: {'refreshToken': _refreshToken},
+        data: {'refreshToken': refreshToken},
       );
 
-      _accessToken = response.data['accessToken'];
-      _refreshToken = response.data['refreshToken'];
+      final newAccessToken = response.data['accessToken'];
+      final newRefreshToken = response.data['refreshToken'];
 
-      err.requestOptions.headers['Authorization'] = 'Bearer $_accessToken';
+      await setTokens(newAccessToken, newRefreshToken);
+
+      err.requestOptions.headers['Authorization'] = 'Bearer $newAccessToken';
       final retryResponse = await dio.fetch(err.requestOptions);
+
       handler.resolve(retryResponse);
     } catch (e) {
-      clearTokens();
+      await clearTokens();
       handler.next(err);
     } finally {
       _isRefreshing = false;

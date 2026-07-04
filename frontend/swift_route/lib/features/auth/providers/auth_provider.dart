@@ -43,7 +43,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       );
 
       final loginResponse = AuthModel.fromJson(response.data);
-      _apiClient.setTokens(
+      await _apiClient.setTokens(
         loginResponse.accessToken,
         loginResponse.refreshToken,
       );
@@ -67,7 +67,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     try {
       await _apiClient.dio.post(ApiEndpoints.logout);
     } finally {
-      _apiClient.clearTokens();
+      await _apiClient.clearTokens();
       state = AuthState(status: AuthStatus.unauthenticated);
     }
   }
