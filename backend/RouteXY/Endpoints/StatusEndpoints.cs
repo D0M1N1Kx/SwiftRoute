@@ -9,6 +9,7 @@ public static class StatusEndpoints
         var group = app.MapGroup("/status").RequireAuthorization();
 
         group.MapGet("/workers", async (
-            StatusService service) => service.GetWorkerCountsAsRoles());
+            StatusService service) => service.GetWorkerCountsByRole())
+            .RequireAuthorization(policy => policy.RequireRole("Admin"));
     }
 }

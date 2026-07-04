@@ -14,6 +14,7 @@ class DashboardState {
   final int totalUsers;
   final int activeCouriers;
   final int totalWarehouses;
+  final Map<String, int> roleCounts;
 
   DashboardState({
     this.isLoading = false,
@@ -23,6 +24,7 @@ class DashboardState {
     this.totalUsers = 0,
     this.activeCouriers = 0,
     this.totalWarehouses = 0,
+    this.roleCounts = const {},
   });
 
   DashboardState copyWith({
@@ -33,6 +35,7 @@ class DashboardState {
     int? totalUsers,
     int? activeCouriers,
     int? totalWarehouses,
+    Map<String, int>? roleCounts,
   }) {
     return DashboardState(
       isLoading: isLoading ?? this.isLoading,
@@ -42,6 +45,7 @@ class DashboardState {
       totalUsers: totalUsers ?? this.totalUsers,
       activeCouriers: activeCouriers ?? this.activeCouriers,
       totalWarehouses: totalWarehouses ?? this.totalWarehouses,
+      roleCounts: roleCounts ?? this.roleCounts,
     );
   }
 }
@@ -59,6 +63,7 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
         _apiClient.dio.get(ApiEndpoints.orders),
         _apiClient.dio.get(ApiEndpoints.users),
         _apiClient.dio.get(ApiEndpoints.warehouses),
+        _apiClient.dio.get(ApiEndpoints.workerCountsByRole),
       ]);
 
       final orders = (results[0].data as List)
@@ -67,10 +72,16 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
 
       final users = results[1].data as List;
       final warehouses = results[2].data as List;
+      final workerStatuses = results[3].data as List;
 
       final stats = <String, int>{};
       for (final order in orders) {
         stats[order.status] = (stats[order.status] ?? 0) + 1;
+      }
+
+      final roleCounts = <String, int>{};
+      for (final item in workerStatuses) {
+        roleCounts[item['role'] as String] = item['count'] as int;
       }
 
       final activeCouriers = users
@@ -84,6 +95,7 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
         totalUsers: users.length,
         activeCouriers: activeCouriers,
         totalWarehouses: warehouses.length,
+        roleCounts: roleCounts,
       );
     } on DioException catch (e) {
       print('DIO ERROR: ${e.message}');

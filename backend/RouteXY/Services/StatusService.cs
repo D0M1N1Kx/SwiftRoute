@@ -12,11 +12,8 @@ public class StatusService
         _db = db;
     }
 
-    public async Task<IResult> GetWorkerCountsAsRoles()
+    public async Task<IResult> GetWorkerCountsByRole()
     {
-        var users = await _db.Users.AnyAsync();
-        if (!users) return Results.NotFound();
-
         var roleCounts = await _db.Users
             .GroupBy(u => u.Role)
             .Select(group => new
@@ -25,7 +22,7 @@ public class StatusService
                 Count = group.Count()
             })
             .ToListAsync();
-        
+
         return Results.Ok(roleCounts);
     }
 }

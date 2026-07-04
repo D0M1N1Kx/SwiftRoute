@@ -23,4 +23,6 @@ class ApiEndpoints {
 
   static const String courierLocations = '/couriers/locations';
   static const String updateLocation = '/couriers/location';
+
+  static const String workerCountsByRole = '/status/workers';
 }
