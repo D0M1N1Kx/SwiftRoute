@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:swift_route/core/widgets/counter_card.dart';
 
 import '../providers/dashboard_provider.dart';
 import '../../../core/widgets/stat_card.dart';
@@ -154,6 +155,18 @@ Widget _buildOverview(DashboardState state) {
 }
 
 Widget _buildWorkerStats(DashboardState state) {
+  final roleConfig = {
+    'Admin': (Icons.admin_panel_settings_outlined, Colors.red),
+    'Dispatcher': (Icons.headset_mic_outlined, Colors.blue),
+    'Courier': (Icons.directions_bike_outlined, Colors.orange),
+    'WarehouseStaff': (Icons.warehouse_outlined, Colors.purple),
+    'Driver': (Icons.local_shipping_outlined, Colors.indigo),
+  };
+
+  final roles = state.roleCounts.entries.toList();
+
+  if (roles.isEmpty) return const SizedBox();
+
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -162,15 +175,22 @@ Widget _buildWorkerStats(DashboardState state) {
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
       const SizedBox(height: 12),
-      Wrap(
-        spacing: 10,
-        runSpacing: 10,
-        children: state.orderStats.entries.map((e) {
-          return StatCard(
-            title: e.key,
-            value: e.value.toString(),
-            icon: Icons.circle,
-            color: _statusColor(e.key),
+      GridView.count(
+        crossAxisCount: 3,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+        children: roles.map((entry) {
+          final config = roleConfig[entry.key];
+          final icon = config?.$1 ?? Icons.person_outlined;
+          final color = config?.$2 ?? Colors.grey;
+
+          return CounterCard(
+            icon: icon,
+            title: entry.key,
+            value: entry.value.toString(),
+            color: color,
           );
         }).toList(),
       ),

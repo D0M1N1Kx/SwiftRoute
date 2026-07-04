@@ -29,7 +29,7 @@ class DashboardState {
 
   DashboardState copyWith({
     bool? isLoading,
-    String? error,
+    Object? error = _sentinel,
     List<OrderModel>? recentOrders,
     Map<String, int>? orderStats,
     int? totalUsers,
@@ -39,7 +39,7 @@ class DashboardState {
   }) {
     return DashboardState(
       isLoading: isLoading ?? this.isLoading,
-      error: error ?? this.error,
+      error: error == _sentinel ? this.error : error as String?,
       recentOrders: recentOrders ?? this.recentOrders,
       orderStats: orderStats ?? this.orderStats,
       totalUsers: totalUsers ?? this.totalUsers,
@@ -48,6 +48,8 @@ class DashboardState {
       roleCounts: roleCounts ?? this.roleCounts,
     );
   }
+
+  static const Object _sentinel = Object();
 }
 
 class DashboardNotifier extends StateNotifier<DashboardState> {
