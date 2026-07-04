@@ -196,7 +196,7 @@ Widget _buildWorkerStats(DashboardState state) {
       ),
     ],
   );
-} // TODO: NEED TO BE FIXED LIKE ON THE IMAGE
+}
 
 Color _statusColor(String status) {
   switch (status) {

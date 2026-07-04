@@ -81,9 +81,19 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
         stats[order.status] = (stats[order.status] ?? 0) + 1;
       }
 
-      final roleCounts = <String, int>{};
+      final roleCounts = <String, int>{
+        'Admin': 0,
+        'Dispatcher': 0,
+        'Courier': 0,
+        'WarehouseStaff': 0,
+        'Driver': 0,
+      };
+
       for (final item in workerStatuses) {
-        roleCounts[item['role'] as String] = item['count'] as int;
+        final roleName = item['role'] as String;
+        if (roleCounts.containsKey(roleName)) {
+          roleCounts[roleName] = item['count'] as int;
+        }
       }
 
       final activeCouriers = users
