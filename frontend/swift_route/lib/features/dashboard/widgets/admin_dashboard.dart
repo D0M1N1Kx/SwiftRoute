@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../providers/dashboard_provider.dart';
-import '../../../core/widgets/order_list_tile.dart';
-import '../../../core/widgets/section_header.dart';
 import '../../../core/widgets/stat_card.dart';
 
 class AdminDashboard extends ConsumerStatefulWidget {
