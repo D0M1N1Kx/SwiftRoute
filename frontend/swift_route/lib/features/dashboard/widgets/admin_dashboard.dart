@@ -118,7 +118,7 @@ Widget _buildOverview(DashboardState state) {
     padding: EdgeInsets.only(top: 8.0),
     crossAxisSpacing: 12,
     mainAxisSpacing: 12,
-    childAspectRatio: 1.6,
+    childAspectRatio: 2,
     children: [
       StatCard(
         title: "Users",
