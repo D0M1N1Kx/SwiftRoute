@@ -11,6 +11,9 @@ class DashboardState {
   final String? error;
   final List<OrderModel> recentOrders;
   final Map<String, int> orderStats;
+  final Map<String, List<int>>
+  statusSeries; // per-status time series (last N days)
+  final List<String> seriesLabels;
   final int totalUsers;
   final int activeCouriers;
   final int totalWarehouses;
@@ -25,6 +28,8 @@ class DashboardState {
     this.activeCouriers = 0,
     this.totalWarehouses = 0,
     this.roleCounts = const {},
+    this.statusSeries = const {},
+    this.seriesLabels = const [],
   });
 
   DashboardState copyWith({
@@ -32,6 +37,8 @@ class DashboardState {
     Object? error = _sentinel,
     List<OrderModel>? recentOrders,
     Map<String, int>? orderStats,
+    Map<String, List<int>>? statusSeries,
+    List<String>? seriesLabels,
     int? totalUsers,
     int? activeCouriers,
     int? totalWarehouses,
@@ -46,6 +53,8 @@ class DashboardState {
       activeCouriers: activeCouriers ?? this.activeCouriers,
       totalWarehouses: totalWarehouses ?? this.totalWarehouses,
       roleCounts: roleCounts ?? this.roleCounts,
+      statusSeries: statusSeries ?? this.statusSeries,
+      seriesLabels: seriesLabels ?? this.seriesLabels,
     );
   }
 
@@ -81,6 +90,52 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
         stats[order.status] = (stats[order.status] ?? 0) + 1;
       }
 
+      // prepare last 7 days labels and per-status series
+      final statuses = [
+        'Pending',
+        'Assigned',
+        'PickedUp',
+        'InTransit',
+        'Delivered',
+        'Failed',
+        'Cancelled',
+      ];
+
+      final now = DateTime.now();
+      final days = List.generate(
+        7,
+        (i) => DateTime(
+          now.year,
+          now.month,
+          now.day,
+        ).subtract(Duration(days: 6 - i)),
+      );
+      final labels = days
+          .map(
+            (d) =>
+                '${d.month.toString().padLeft(2, '0')}.${d.day.toString().padLeft(2, '0')}',
+          )
+          .toList();
+
+      final series = <String, List<int>>{};
+      for (final s in statuses) {
+        series[s] = List.filled(days.length, 0);
+      }
+
+      for (final order in orders) {
+        final created = order.createdAt.toLocal();
+        for (var i = 0; i < days.length; i++) {
+          final d = days[i];
+          if (created.year == d.year &&
+              created.month == d.month &&
+              created.day == d.day) {
+            if (series.containsKey(order.status)) {
+              series[order.status]![i] = series[order.status]![i] + 1;
+            }
+          }
+        }
+      }
+
       final roleCounts = <String, int>{
         'Admin': 0,
         'Dispatcher': 0,
@@ -104,6 +159,8 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
         isLoading: false,
         recentOrders: orders.take(10).toList(),
         orderStats: stats,
+        statusSeries: series,
+        seriesLabels: labels,
         totalUsers: users.length,
         activeCouriers: activeCouriers,
         totalWarehouses: warehouses.length,

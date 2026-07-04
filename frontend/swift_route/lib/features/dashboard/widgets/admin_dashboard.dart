@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:swift_route/core/widgets/counter_card.dart';
+import 'package:swift_route/core/widgets/package_status_card.dart';
 
 import '../providers/dashboard_provider.dart';
 import '../../../core/widgets/stat_card.dart';
+import 'package_status_chart.dart';
 
 class AdminDashboard extends ConsumerStatefulWidget {
   const AdminDashboard({super.key});
@@ -93,6 +95,10 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> {
             /*_buildRolesStats(state),*/
             const SizedBox(height: 16),
             _buildWorkerStats(state),
+            const SizedBox(height: 16),
+            _buildPackageStatusOverview(state),
+            const SizedBox(height: 12),
+            _buildPackageStatusChart(state),
           ],
         ),
       ),
@@ -109,6 +115,68 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> {
     if (width > 800) return 2;
     return 1;
   }
+}
+
+Widget _buildPackageStatusOverview(DashboardState state) {
+  final statuses = [
+    'Pending',
+    'Assigned',
+    'PickedUp',
+    'InTransit',
+    'Delivered',
+    'Failed',
+    'Cancelled',
+  ];
+
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Text(
+        'Summary of package status',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      const SizedBox(height: 12),
+      LayoutBuilder(
+        builder: (context, constraints) {
+          final crossAxisCount = (constraints.maxWidth / 180).floor().clamp(
+            1,
+            4,
+          );
+          return GridView.count(
+            crossAxisCount: crossAxisCount,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            childAspectRatio: 2.5,
+            children: statuses.map((s) {
+              final value = state.orderStats[s] ?? 0;
+              return PackageStatusCard(
+                title: s,
+                value: value,
+                color: _statusColor(s),
+              );
+            }).toList(),
+          );
+        },
+      ),
+    ],
+  );
+}
+
+Widget _buildPackageStatusChart(DashboardState state) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const SizedBox(height: 12),
+      const Text('Diagram', style: TextStyle(fontWeight: FontWeight.bold)),
+      const SizedBox(height: 8),
+      PackageStatusChart(
+        series: state.statusSeries,
+        labels: state.seriesLabels,
+      ),
+    ],
+  );
 }
 
 Widget _buildOverview(DashboardState state) {
