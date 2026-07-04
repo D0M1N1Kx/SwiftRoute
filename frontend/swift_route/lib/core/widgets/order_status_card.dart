@@ -5,10 +5,10 @@ class OrderStatusCard extends StatelessWidget {
   final IconData iconData;
 
   const OrderStatusCard({
-    Key? key,
+    super.key,
     required this.orderStatus,
     required this.iconData,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

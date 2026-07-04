@@ -20,7 +20,7 @@ class PackageStatusCard extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(blurRadius: 8, color: Colors.black.withOpacity(0.04)),
+          BoxShadow(blurRadius: 8, color: Colors.black.withValues(alpha: 0.04)),
         ],
       ),
       child: Column(

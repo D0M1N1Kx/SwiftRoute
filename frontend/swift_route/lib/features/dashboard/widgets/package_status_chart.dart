@@ -75,8 +75,9 @@ class PackageStatusChart extends StatelessWidget {
                     showTitles: true,
                     getTitlesWidget: (value, meta) {
                       final idx = value.toInt();
-                      if (idx < 0 || idx >= labels.length)
+                      if (idx < 0 || idx >= labels.length) {
                         return const SizedBox();
+                      }
                       return Padding(
                         padding: const EdgeInsets.only(top: 6.0),
                         child: Text(
