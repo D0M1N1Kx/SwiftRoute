@@ -84,6 +84,7 @@ builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<InventoryService>();
 builder.Services.AddSignalR();
 builder.Services.AddScoped<LocationService>();
+builder.Services.AddScoped<StatusService>();
 
 var app = builder.Build();
 
@@ -125,5 +126,6 @@ app.MapInventoryItemEndpoints();
 app.MapOrderEndpoints();
 app.MapHub<LocationHub>("/hubs/location");
 app.MapLocationEndpoints();
+app.MapStatusEndpoints();
 
 app.Run();
