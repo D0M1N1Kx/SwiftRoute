@@ -70,6 +70,8 @@ class ApiClient {
     _isRefreshing = true;
 
     try {
+      _refreshDio.options.headers.remove('Authorization');
+
       final response = await _refreshDio.post(
         '/auth/refresh',
         data: {'refreshToken': refreshToken},
@@ -80,8 +82,11 @@ class ApiClient {
 
       await setTokens(newAccessToken, newRefreshToken);
 
-      err.requestOptions.headers['Authorization'] = 'Bearer $newAccessToken';
-      final retryResponse = await dio.fetch(err.requestOptions);
+      final requestOptions = err.requestOptions;
+
+      requestOptions.headers['Authorization'] = 'Bearer $newAccessToken';
+
+      final retryResponse = await dio.fetch(requestOptions);
 
       handler.resolve(retryResponse);
     } catch (e) {
