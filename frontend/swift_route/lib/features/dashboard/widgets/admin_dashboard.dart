@@ -91,7 +91,7 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> {
 
             /*_buildRolesStats(state),*/
             const SizedBox(height: 16),
-            _buildOrderStats(state),
+            _buildWorkerStats(state),
           ],
         ),
       ),
@@ -153,11 +153,14 @@ Widget _buildOverview(DashboardState state) {
   );
 }
 
-Widget _buildOrderStats(DashboardState state) {
+Widget _buildWorkerStats(DashboardState state) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      const Text("Order Status", style: TextStyle(fontWeight: FontWeight.bold)),
+      const Text(
+        "Workers by roles",
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
       const SizedBox(height: 12),
       Wrap(
         spacing: 10,
