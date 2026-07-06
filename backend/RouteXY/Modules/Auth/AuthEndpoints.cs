@@ -1,6 +1,5 @@
 using FluentValidation;
 using RouteXY.Api.Modules.Auth.Requests;
-using RouteXY.Api.Services;
 
 namespace RouteXY.Api.Modules.Auth;
 
@@ -20,15 +19,8 @@ public static class AuthEndpoints
             if (!validation.IsValid)
                 return Results.ValidationProblem(validation.ToDictionary());
             
-            try
-            {
-                var response = await authService.LoginAsync(request);
-                return Results.Ok(response);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Results.Unauthorized();
-            }
+            var response = await authService.LoginAsync(request);
+            return Results.Ok(response);
         })
         .AllowAnonymous()
         .WithSummary("Login user");
@@ -49,15 +41,8 @@ public static class AuthEndpoints
             AuthService authService
         ) =>
         {
-            try
-            {
-                var response = await authService.RefreshAsync(request);
-                return Results.Ok(response);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Results.Unauthorized();
-            }
+            var response = await authService.RefreshAsync(request);
+            return Results.Ok(response);
         })
         .AllowAnonymous()
         .WithSummary("Refresh access token");

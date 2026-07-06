@@ -30,12 +30,8 @@ public static class InventoryItemEndpoints
             InventoryService inventoryService
         ) =>
         {
-            try {
-                var response = await inventoryService.GetInventoryByIdAsync(warehouse);
-                return Results.Ok(response);
-            } catch (KeyNotFoundException) {
-                return Results.NotFound();
-            }
+            var response = await inventoryService.GetInventoryByIdAsync(warehouse);
+            return Results.Ok(response);
         })
         .WithSummary("Get warehouse's inventory by id");
 
@@ -44,12 +40,8 @@ public static class InventoryItemEndpoints
             InventoryService inventoryService
         ) =>
         {
-            try {
-                var i = await inventoryService.GetItemByIdAsync(item);
-                return Results.Ok(i);
-            } catch (KeyNotFoundException) {
-                return Results.NotFound();
-            }
+            var i = await inventoryService.GetItemByIdAsync(item);
+            return Results.Ok(i);
         })
         .WithSummary("Get inventory item by id");
 
@@ -58,12 +50,8 @@ public static class InventoryItemEndpoints
             InventoryService inventoryService
         ) =>
         {
-            try {
-                await inventoryService.DeleteItemByIdAsync(i);
-                return Results.NoContent();
-            } catch (KeyNotFoundException) {
-                return Results.NotFound();
-            }
+            await inventoryService.DeleteItemByIdAsync(i);
+            return Results.NoContent();
         })
         .RequireAuthorization(policy => policy.RequireRole("Admin", "Dispatcher"))
         .WithSummary("Delete item by id");
@@ -79,13 +67,9 @@ public static class InventoryItemEndpoints
 
             if (!validation.IsValid)
                 return Results.ValidationProblem(validation.ToDictionary());
-
-            try {
-                var item = await inventoryService.UpdateItemByIdAsync(id, request);
-                return Results.Ok(item);
-            } catch (KeyNotFoundException) {
-                return Results.NotFound();
-            }
+            
+            var item = await inventoryService.UpdateItemByIdAsync(id, request);
+            return Results.Ok(item);
         })
         .RequireAuthorization(policy => policy.RequireRole("Admin", "Dispatcher"))
         .WithSummary("Update item by id");

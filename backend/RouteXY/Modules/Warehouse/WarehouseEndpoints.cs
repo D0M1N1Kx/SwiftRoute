@@ -19,14 +19,8 @@ public static class WarehouseEndpoints
             if (!validation.IsValid)
                 return Results.ValidationProblem(validation.ToDictionary());
             
-            try
-            {
-                var response = await service.AddWarehouseAsync(request);
-                return Results.Ok(response);
-            } catch (UnauthorizedAccessException)
-            {
-                return Results.Unauthorized();
-            }
+            var response = await service.AddWarehouseAsync(request);
+            return Results.Ok(response);
         })
         .RequireAuthorization(policy => policy.RequireRole("Admin"))
         .WithSummary("Add warehouse");
@@ -59,15 +53,9 @@ public static class WarehouseEndpoints
 
             if (!validation.IsValid)
                 return Results.ValidationProblem(validation.ToDictionary());
-
-            try
-            {
-                await warehouseService.UpdateWarehouseAsync(id, request);
-                return Results.NoContent();
-            } catch (KeyNotFoundException)
-            {
-                return Results.NotFound();
-            }
+            
+            await warehouseService.UpdateWarehouseAsync(id, request);
+            return Results.NoContent();
         })
         .RequireAuthorization(policy => policy.RequireRole("Admin"))
         .WithSummary("Modify warehouse");
@@ -77,14 +65,8 @@ public static class WarehouseEndpoints
             WarehouseService warehouseService
         ) =>
         {
-            try
-            {
-                await warehouseService.DeleteWarehouseAsync(id);
-                return Results.NoContent();
-            } catch (KeyNotFoundException)
-            {
-                return Results.NotFound();
-            }
+            await warehouseService.DeleteWarehouseAsync(id);
+            return Results.NoContent();
         })
         .RequireAuthorization(policy => policy.RequireRole("Admin"))
         .WithSummary("Delete warehouse by id");

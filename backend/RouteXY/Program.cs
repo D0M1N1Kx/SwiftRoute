@@ -33,6 +33,9 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -77,6 +80,8 @@ if (app.Environment.IsDevelopment())
         options.AddPreferredSecuritySchemes("Bearer");
     });
 }
+
+app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

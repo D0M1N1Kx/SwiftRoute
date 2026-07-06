@@ -60,18 +60,9 @@ public static class OrderEndpoints
             var userId = Guid.Parse(
                 context.User.FindFirst(ClaimTypes.NameIdentifier)!.Value
             );
-
-            try
-            {
-                await orderService.AssignCourierAsync(id, request.CourierId, userId);
-                return Results.NoContent();
-            } catch (KeyNotFoundException)
-            {
-                return Results.NotFound();
-            } catch (InvalidOperationException ex)
-            {
-                return Results.BadRequest(ex.Message);
-            }
+            
+            await orderService.AssignCourierAsync(id, request.CourierId, userId); 
+            return Results.NoContent();
         })
         .RequireAuthorization(policy => policy.RequireRole("Admin", "Dispatcher"))
         .WithSummary("Assign courier to order");
@@ -91,28 +82,16 @@ public static class OrderEndpoints
             var userId = Guid.Parse(
                 context.User.FindFirst(ClaimTypes.NameIdentifier)!.Value
             );
-
-            try
-            {
-                await orderService.UpdateStatusAsync(id, request.Status, request.Note ?? null, userId);
-                return Results.NoContent();
-            } catch (KeyNotFoundException)
-            {
-                return Results.NotFound();
-            }
+            
+            await orderService.UpdateStatusAsync(id, request.Status, request.Note ?? null, userId);
+            return Results.NoContent();
         })
         .WithSummary("Update order status");
 
         group.MapDelete("/{id:guid}", async (Guid id, OrderService orderService) =>
         {
-            try
-            {
-                await orderService.DeleteAsync(id);
-                return Results.NoContent();
-            } catch (KeyNotFoundException)
-            {
-                return Results.NotFound();
-            }
+            await orderService.DeleteAsync(id);
+            return Results.NoContent();
         })
         .RequireAuthorization(policy => policy.RequireRole("Admin", "Dispatcher"))
         .WithSummary("Delete order by id");
