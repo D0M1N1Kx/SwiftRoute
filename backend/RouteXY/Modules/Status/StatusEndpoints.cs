@@ -1,6 +1,4 @@
-using RouteXY.Api.Services;
-
-namespace RouteXY.Api.Endpoints;
+namespace RouteXY.Api.Modules.Status;
 
 public static class StatusEndpoints
 {

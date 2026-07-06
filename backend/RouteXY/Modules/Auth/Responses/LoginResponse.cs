@@ -1,4 +1,6 @@
-namespace RouteXY.Api.Responses;
+using RouteXY.Api.Auth.Responses;
+
+namespace RouteXY.Api.Modules.Auth.Responses;
 
 public class LoginResponse
 {

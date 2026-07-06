@@ -1,6 +1,6 @@
 using RouteXY.Api.Enums;
 
-namespace RouteXY.Api.Responses;
+namespace RouteXY.Api.Auth.Responses;
 
 public class UserResponse
 {

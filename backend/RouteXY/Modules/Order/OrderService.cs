@@ -2,10 +2,10 @@ using Microsoft.EntityFrameworkCore;
 using RouteXY.Api.Data;
 using RouteXY.Api.Entities;
 using RouteXY.Api.Enums;
-using RouteXY.Api.Requests;
-using RouteXY.Api.Responses;
+using RouteXY.Api.Modules.Order.Requests;
+using RouteXY.Api.Modules.Order.Responses;
 
-namespace RouteXY.Api.Services;
+namespace RouteXY.Api.Modules.Order;
 
 public class OrderService
 {
@@ -35,9 +35,9 @@ public class OrderService
         return order == null ? null : MapToResponse(order);
     }
 
-    public async Task<Order> CreateAsync(CreateOrderRequest request, Guid dispatcherId)
+    public async Task<Entities.Order> CreateAsync(CreateOrderRequest request, Guid dispatcherId)
     {
-        var order = new Order
+        var order = new Entities.Order
         {
             Id = Guid.NewGuid(),
             TrackingNumber = GenerateTrackingNumber(),
@@ -126,7 +126,7 @@ public class OrderService
         await _db.SaveChangesAsync();
     }
 
-    private static OrderResponse MapToResponse(Order o) => new()
+    private static OrderResponse MapToResponse(Entities.Order o) => new()
     {
         Id = o.Id,
         TrackingNumber = o.TrackingNumber,

@@ -1,6 +1,6 @@
 using RouteXY.Api.Enums;
 
-namespace RouteXY.Api.Responses;
+namespace RouteXY.Api.Modules.Order.Responses;
 
 public class OrderResponse
 {

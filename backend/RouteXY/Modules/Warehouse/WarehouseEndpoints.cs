@@ -1,8 +1,7 @@
 using FluentValidation;
-using RouteXY.Api.Requests;
-using RouteXY.Api.Services;
+using RouteXY.Api.Modules.Warehouse.Requests;
 
-namespace RouteXY.Api.Endpoints;
+namespace RouteXY.Api.Modules.Warehouse;
 
 public static class WarehouseEndpoints
 {

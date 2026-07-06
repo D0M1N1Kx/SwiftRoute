@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using RouteXY.Api.Enums;
 
-namespace RouteXY.Api.Requests;
+namespace RouteXY.Api.Modules.Auth.Requests;
 
 public class CreateUserRequest
 {

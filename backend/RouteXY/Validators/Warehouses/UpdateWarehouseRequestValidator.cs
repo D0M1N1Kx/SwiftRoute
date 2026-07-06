@@ -1,7 +1,7 @@
 using FluentValidation;
-using RouteXY.Api.Requests;
+using RouteXY.Api.Modules.Warehouse.Requests;
 
-namespace RouteXY.Api.Validators;
+namespace RouteXY.Api.Validators.Warehouses;
 
 public class UpdateWarehouseRequestValidator : AbstractValidator<UpdateWarehouseRequest>
 {

@@ -1,8 +1,8 @@
 using FluentValidation;
-using RouteXY.Api.Requests;
+using RouteXY.Api.Modules.Auth.Requests;
 using RouteXY.Api.Services;
 
-namespace RouteXY.Api.Endpoints;
+namespace RouteXY.Api.Modules.Auth;
 
 public static class AuthEndpoints
 {

@@ -1,5 +1,5 @@
 using FluentValidation;
-using RouteXY.Api.Requests;
+using RouteXY.Api.Modules.Auth.Requests;
 
 namespace RouteXY.Api.Validators.Users;
 

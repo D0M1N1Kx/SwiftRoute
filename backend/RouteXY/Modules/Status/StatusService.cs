@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using RouteXY.Api.Data;
 
-namespace RouteXY.Api.Services;
+namespace RouteXY.Api.Modules.Status;
 
 public class StatusService
 {

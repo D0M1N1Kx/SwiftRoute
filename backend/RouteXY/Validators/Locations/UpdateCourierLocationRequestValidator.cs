@@ -1,7 +1,7 @@
 using FluentValidation;
-using RouteXY.Api.Requests;
+using RouteXY.Api.Modules.Location.Requests;
 
-namespace RouteXY.Api.Validators;
+namespace RouteXY.Api.Validators.Locations;
 
 public class UpdateCourierLocationRequestValidator : AbstractValidator<UpdateCourierLocationRequest>
 {

@@ -1,9 +1,8 @@
 using System.Security.Claims;
 using FluentValidation;
-using RouteXY.Api.Requests;
-using RouteXY.Api.Services;
+using RouteXY.Api.Modules.Location.Requests;
 
-namespace RouteXY.Api.Endpoints;
+namespace RouteXY.Api.Modules.Location;
 
 public static class LocationEndpoints
 {

@@ -1,4 +1,4 @@
-namespace RouteXY.Api.Responses;
+namespace RouteXY.Api.Modules.Warehouse.Responses;
 
 public class WarehouseResponse
 {

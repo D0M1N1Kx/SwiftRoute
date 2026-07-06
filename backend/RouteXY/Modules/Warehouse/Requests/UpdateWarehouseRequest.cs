@@ -1,4 +1,4 @@
-namespace RouteXY.Api.Requests;
+namespace RouteXY.Api.Modules.Warehouse.Requests;
 
 public class UpdateWarehouseRequest
 {

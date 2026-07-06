@@ -1,5 +1,5 @@
 using FluentValidation;
-using RouteXY.Api.Requests;
+using RouteXY.Api.Modules.Inventory.Requests;
 
 namespace RouteXY.Api.Validators.Inventory;
 

@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using RouteXY.Api.Data;
 using RouteXY.Api.Entities;
 using RouteXY.Api.Hubs;
-using RouteXY.Api.Requests;
-using RouteXY.Api.Responses;
+using RouteXY.Api.Modules.Location.Requests;
+using RouteXY.Api.Modules.Location.Responses;
 
-namespace RouteXY.Api.Services;
+namespace RouteXY.Api.Modules.Location;
 
 public class LocationService
 {

@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using RouteXY.Api.Data;
 using RouteXY.Api.Entities;
-using RouteXY.Api.Requests;
-using RouteXY.Api.Responses;
+using RouteXY.Api.Modules.Inventory.Requests;
+using RouteXY.Api.Modules.Inventory.Responses;
 
-namespace RouteXY.Api.Services;
+namespace RouteXY.Api.Modules.Inventory;
 
 public class InventoryService
 {

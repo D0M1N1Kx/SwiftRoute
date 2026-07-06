@@ -7,9 +7,14 @@ using System.Text;
 using RouteXY.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using RouteXY.Api.Services;
-using RouteXY.Api.Endpoints;
 using RouteXY.Api.Entities;
 using RouteXY.Api.Hubs;
+using RouteXY.Api.Modules.Auth;
+using RouteXY.Api.Modules.Inventory;
+using RouteXY.Api.Modules.Location;
+using RouteXY.Api.Modules.Order;
+using RouteXY.Api.Modules.Status;
+using RouteXY.Api.Modules.Warehouse;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);

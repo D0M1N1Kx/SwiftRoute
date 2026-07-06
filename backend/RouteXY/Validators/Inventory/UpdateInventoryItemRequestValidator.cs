@@ -1,7 +1,7 @@
 using FluentValidation;
-using RouteXY.Api.Requests;
+using RouteXY.Api.Modules.Inventory.Requests;
 
-namespace RouteXY.Api.Validators;
+namespace RouteXY.Api.Validators.Inventory;
 
 public class UpdateInventoryItemRequestValidator : AbstractValidator<UpdateInventoryItemRequest>
 {

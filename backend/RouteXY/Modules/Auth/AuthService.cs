@@ -1,10 +1,12 @@
 using Microsoft.EntityFrameworkCore;
+using RouteXY.Api.Auth.Responses;
 using RouteXY.Api.Data;
 using RouteXY.Api.Entities;
-using RouteXY.Api.Requests;
-using RouteXY.Api.Responses;
+using RouteXY.Api.Modules.Auth.Requests;
+using RouteXY.Api.Modules.Auth.Responses;
+using RouteXY.Api.Services;
 
-namespace RouteXY.Api.Services;
+namespace RouteXY.Api.Modules.Auth;
 
 public class AuthService
 {

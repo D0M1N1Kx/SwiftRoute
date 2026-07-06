@@ -1,4 +1,4 @@
-namespace RouteXY.Api.Responses;
+namespace RouteXY.Api.Modules.Location.Responses;
 
 public class CourierLocationResponse
 {

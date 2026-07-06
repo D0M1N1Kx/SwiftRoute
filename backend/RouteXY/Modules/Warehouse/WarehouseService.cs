@@ -1,10 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using RouteXY.Api.Data;
-using RouteXY.Api.Entities;
-using RouteXY.Api.Requests;
-using RouteXY.Api.Responses;
+using RouteXY.Api.Modules.Warehouse.Requests;
+using RouteXY.Api.Modules.Warehouse.Responses;
 
-namespace RouteXY.Api.Services;
+namespace RouteXY.Api.Modules.Warehouse;
 
 public class WarehouseService
 {
@@ -17,7 +16,7 @@ public class WarehouseService
 
     public async Task<WarehouseResponse> AddWarehouseAsync(CreateWarehouseRequest request)
     {
-        var warehouse = new Warehouse
+        var warehouse = new Entities.Warehouse
         {
             Id = Guid.NewGuid(),
             Name = request.Name,
@@ -74,7 +73,7 @@ public class WarehouseService
         await _db.SaveChangesAsync();
     }
 
-    private static WarehouseResponse MapToResponse(Warehouse w) => new()
+    private static WarehouseResponse MapToResponse(Entities.Warehouse w) => new()
     {
         Id = w.Id,
         Name = w.Name,

@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace RouteXY.Api.Requests;
+namespace RouteXY.Api.Modules.Order.Requests;
 
 public class CreateOrderRequest
 {

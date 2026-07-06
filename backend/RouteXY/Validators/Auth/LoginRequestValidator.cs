@@ -1,5 +1,5 @@
 using FluentValidation;
-using RouteXY.Api.Requests;
+using Microsoft.AspNetCore.Identity.Data;
 
 namespace RouteXY.Api.Validators.Auth;
 
