@@ -111,5 +111,19 @@ public static class UserEndpoints
         })
         .RequireAuthorization(policy => policy.RequireRole("Admin"))
         .WithSummary("Update user");
+
+        group.MapPatch("/{id:guid}/password", async (
+            Guid id,
+            ChangePasswordRequest request,
+            AuthService service,
+            HttpContext context,
+            IValidator<ChangePasswordRequest> validator
+        ) => {
+            var validation = await validator.ValidateAsync(request);
+            if (!validation.IsValid) return Results.ValidationProblem(validation.ToDictionary());
+            
+            await service.ChangePassword(request, id, context.Request.Headers.Authorization.ToString());
+            return Results.Ok();
+        });
     }
 }

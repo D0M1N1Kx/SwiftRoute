@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using RouteXY.Api.Auth.Responses;
 using RouteXY.Api.Data;
 using RouteXY.Api.Entities;
+using RouteXY.Api.Enums;
 using RouteXY.Api.Modules.Auth.Requests;
 using RouteXY.Api.Modules.Auth.Responses;
 using RouteXY.Api.Services;
@@ -165,6 +166,26 @@ public class AuthService
         if (refreshToken == null || refreshToken.Revoked) return;
 
         refreshToken.Revoked = true;
+        await _db.SaveChangesAsync();
+    }
+
+    public async Task ChangePassword(ChangePasswordRequest dto, Guid id, string token)
+    {
+        var tokenUser = _tokenService.GetUserClaimsFromToken(token);
+        if (tokenUser == null) throw new UnauthorizedAccessException("Invalid or missing token");
+        
+        if (tokenUser.Id != id && tokenUser.Role != UserRole.Admin) 
+            throw new UnauthorizedAccessException("You can't change password for another user");
+        
+        var user = await _db.Users.FindAsync(id);
+        if (user == null) 
+            throw new KeyNotFoundException("User not found");
+        
+        
+        if (!BCrypt.Net.BCrypt.Verify(dto.OldPassword, user.PasswordHash))
+            throw new UnauthorizedAccessException("Invalid old password");
+        
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
         await _db.SaveChangesAsync();
     }
 }
