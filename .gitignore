@@ -5,3 +5,4 @@ appsettings.Development.json
 bin/
 
 .env
+.vscode/
