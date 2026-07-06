@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using Microsoft.OpenApi;
 using FluentValidation;
 using RouteXY.Api.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -11,6 +10,8 @@ using RouteXY.Api.Services;
 using RouteXY.Api.Endpoints;
 using RouteXY.Api.Entities;
 using RouteXY.Api.Hubs;
+using Scalar.AspNetCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 var jwtSettings = builder.Configuration
@@ -18,36 +19,7 @@ var jwtSettings = builder.Configuration
     .Get<JwtSettings>()!;
 builder.Services.AddSingleton(jwtSettings);
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "RouteXY API",
-        Version = "v1",
-        Description = "Courier management system API"
-    });
-
-    var jwtSecurityScheme = new OpenApiSecurityScheme
-    {
-        Name = "Authorization",
-        Type = SecuritySchemeType.Http,
-        Scheme = "Bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Description = "Bearer {token}"
-    };
-
-    options.AddSecurityDefinition("Bearer", jwtSecurityScheme);
-
-    options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecuritySchemeReference("Bearer", null, null),
-            new List<string>()
-        }
-    });
-});
+builder.Services.AddOpenApi("v1", options => options.AddDocumentTransformer<BearerSecuritySchemeTransformer>());
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
@@ -90,8 +62,15 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapOpenApi();
+    app.MapScalarApiReference(options =>
+    {
+        options.WithTitle("RouteXY API")
+            .WithTheme(ScalarTheme.BluePlanet)
+            .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
+
+        options.AddPreferredSecuritySchemes("Bearer");
+    });
 }
 
 app.UseHttpsRedirection();

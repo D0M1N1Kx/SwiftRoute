@@ -10,10 +10,10 @@ public class UpdateCourierLocationRequest
     [DefaultValue(19.0402)]
     public double Longitude { get; set; }
 
-    [DefaultValue(47.5)]
+    [DefaultValue(47.5f)]
     public float? SpeedKmh { get; set; }
 
-    [DefaultValue(180.0)]
+    [DefaultValue(180.0f)]
     public float? Heading { get; set; }
 
     public Guid? OrderId { get; set; }
