@@ -3,12 +3,12 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using RouteXY.Api.Class;
+using RouteXY.Api.Shared.Classes;
 using RouteXY.Api.Entities;
 using RouteXY.Api.Enums;
 using RouteXY.Api.Settings;
 
-namespace RouteXY.Api.Services;
+namespace RouteXY.Api.Shared.Services;
 
 public class TokenService
 {

@@ -6,7 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using RouteXY.Api.Data;
 using Microsoft.EntityFrameworkCore;
-using RouteXY.Api.Services;
+using RouteXY.Api.Shared.Services;
 using RouteXY.Api.Entities;
 using RouteXY.Api.Hubs;
 using RouteXY.Api.Modules.Auth;

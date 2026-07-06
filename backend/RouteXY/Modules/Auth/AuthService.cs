@@ -5,7 +5,7 @@ using RouteXY.Api.Entities;
 using RouteXY.Api.Enums;
 using RouteXY.Api.Modules.Auth.Requests;
 using RouteXY.Api.Modules.Auth.Responses;
-using RouteXY.Api.Services;
+using RouteXY.Api.Shared.Services;
 
 namespace RouteXY.Api.Modules.Auth;
 

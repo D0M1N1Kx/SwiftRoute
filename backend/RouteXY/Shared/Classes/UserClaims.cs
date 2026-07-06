@@ -1,6 +1,6 @@
 using RouteXY.Api.Enums;
 
-namespace RouteXY.Api.Class;
+namespace RouteXY.Api.Shared.Classes;
 
 public class UserClaims
 {
