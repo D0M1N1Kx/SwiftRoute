@@ -15,6 +15,7 @@ public static class LocationEndpoints
             var locations = await locationService.GetLatestLocationsAsync();
             return Results.Ok(locations);
         })
+        .RequireAuthorization(policy => policy.RequireRole("Admin", "Dispatcher"))
         .WithSummary("Get latest location of all couriers");
 
         group.MapPost("/location", async (
