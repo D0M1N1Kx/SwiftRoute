@@ -15,6 +15,7 @@ public class CourierService(AppDbContext db, TokenService tokenService)
     {
         var orders = await _db.Orders
             .Include(o => o.Dispatcher)
+            .Include(o => o.Courier)
             .Where(o => o.CourierId == userId
                 && o.Status != OrderStatus.Delivered
                 && o.Status != OrderStatus.Cancelled
