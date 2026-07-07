@@ -16,6 +16,7 @@ using RouteXY.Api.Modules.Order;
 using RouteXY.Api.Modules.Status;
 using RouteXY.Api.Modules.Warehouse;
 using Scalar.AspNetCore;
+using RouteXY.Api.Modules.Courier;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -65,6 +66,7 @@ builder.Services.AddScoped<InventoryService>();
 builder.Services.AddSignalR();
 builder.Services.AddScoped<LocationService>();
 builder.Services.AddScoped<StatusService>();
+builder.Services.AddScoped<CourierService>();
 
 var app = builder.Build();
 
@@ -116,5 +118,6 @@ app.MapOrderEndpoints();
 app.MapHub<LocationHub>("/hubs/location");
 app.MapLocationEndpoints();
 app.MapStatusEndpoints();
+app.MapCourierEndpoints();
 
 app.Run();
