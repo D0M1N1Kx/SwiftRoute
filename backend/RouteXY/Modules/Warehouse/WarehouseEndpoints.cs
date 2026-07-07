@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using FluentValidation;
 using RouteXY.Api.Modules.Warehouse.Requests;
 
@@ -70,5 +71,16 @@ public static class WarehouseEndpoints
         })
         .RequireAuthorization(policy => policy.RequireRole("Admin"))
         .WithSummary("Delete warehouse by id");
+
+        group.MapPatch("{id:guid}/status", async (
+            HttpContext context,
+            Guid id,
+            WarehouseService service
+        ) =>
+        {
+            await service.ActivateOrDeactivateWarehouseAsync(id);
+            return Results.NoContent();
+        })
+        .RequireAuthorization(policy => policy.RequireRole("Admin"));
     }
 }

@@ -73,6 +73,15 @@ public class WarehouseService
         await _db.SaveChangesAsync();
     }
 
+    public async Task ActivateOrDeactivateWarehouseAsync(Guid id)
+    {
+        var warehouse = await _db.Warehouses.FirstOrDefaultAsync(w => w.Id == id)
+            ?? throw new KeyNotFoundException("Warehouse not found");
+
+        warehouse.IsActive = !warehouse.IsActive;
+        await _db.SaveChangesAsync();
+    }
+
     private static WarehouseResponse MapToResponse(Entities.Warehouse w) => new()
     {
         Id = w.Id,
