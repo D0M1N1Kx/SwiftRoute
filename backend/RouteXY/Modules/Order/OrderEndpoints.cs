@@ -95,5 +95,10 @@ public static class OrderEndpoints
         })
         .RequireAuthorization(policy => policy.RequireRole("Admin", "Dispatcher"))
         .WithSummary("Delete order by id");
+
+        group.MapGet("/{id:guid}/history", async (
+            Guid id,
+            OrderService service
+        ) => Results.Ok(await service.GetOrderHistory(id)));
     }
 }

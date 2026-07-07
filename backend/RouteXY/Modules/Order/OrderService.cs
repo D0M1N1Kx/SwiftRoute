@@ -126,6 +126,20 @@ public class OrderService
         await _db.SaveChangesAsync();
     }
 
+    public async Task<List<OrderHistoryResponse>> GetOrderHistory(Guid id)
+    {
+        var histories = await _db.OrderStatusHistories
+            .Include(h => h.ChangedByUser)
+            .Where(h => h.OrderId == id)
+            .Select(h => MapToResponse(h))
+            .ToListAsync();
+        
+        if (histories.Count == 0)
+            throw new KeyNotFoundException("Histories not found");
+
+        return histories;
+    }
+
     private static OrderResponse MapToResponse(Entities.Order o) => new()
     {
         Id = o.Id,
@@ -144,6 +158,18 @@ public class OrderService
         CourierName = o.Courier?.FullName,
         CreatedAt = o.CreatedAt,
         DeliveredAt = o.DeliveredAt
+    };
+
+    private static OrderHistoryResponse MapToResponse(Entities.OrderStatusHistory h) => new()
+    {
+        Id = h.Id,
+        OrderId = h.OrderId,
+        ChangedById = h.ChangedBy,
+        ChangedByName = h.ChangedByUser.FullName,
+        OldStatus = h.OldStatus,
+        NewStatus = h.NewStatus,
+        Note = h.Note,
+        ChangedAt = h.ChangedAt
     };
 
     private static string GenerateTrackingNumber() =>
